@@ -11,7 +11,12 @@
     "phone": "(11) 3456-7890",
     "email": "contato@horizonteconstrutora.com.br",
     "website": "https://horizonteconstrutora.com.br",
-    "services": ["Construção residencial", "Construção comercial", "Reformas", "Gestão de obra"],
+    "services": [
+      "Construção residencial",
+      "Construção comercial",
+      "Reformas",
+      "Gestão de obra"
+    ],
     "plan": "premium",
     "verified": true,
     "createdAt": "2024-01-10T10:00:00.000Z",
@@ -30,7 +35,13 @@
     "phone": "(21) 2234-5678",
     "email": "vendas@terrafirme.com.br",
     "website": "https://terrafirme.com.br",
-    "services": ["Cimento e agregados", "Ferragens e aço", "Hidráulica e elétrica", "Acabamentos", "Entrega em obra"],
+    "services": [
+      "Cimento e agregados",
+      "Ferragens e aço",
+      "Hidráulica e elétrica",
+      "Acabamentos",
+      "Entrega em obra"
+    ],
     "plan": "verificado",
     "verified": true,
     "createdAt": "2024-02-05T10:00:00.000Z",
@@ -49,7 +60,13 @@
     "phone": "(31) 9876-5432",
     "email": "orcamento@eletrocivil.com.br",
     "website": "",
-    "services": ["Instalações residenciais", "Instalações comerciais", "Projeto elétrico", "Laudo SPDA", "Automação residencial"],
+    "services": [
+      "Instalações residenciais",
+      "Instalações comerciais",
+      "Projeto elétrico",
+      "Laudo SPDA",
+      "Automação residencial"
+    ],
     "plan": "verificado",
     "verified": true,
     "createdAt": "2024-01-20T10:00:00.000Z",
@@ -68,7 +85,12 @@
     "phone": "(51) 3322-1100",
     "email": "hidro@hidromaster.com.br",
     "website": "",
-    "services": ["Instalações hidráulicas", "Instalação de gás", "Manutenção preventiva", "Detecção de vazamentos"],
+    "services": [
+      "Instalações hidráulicas",
+      "Instalação de gás",
+      "Manutenção preventiva",
+      "Detecção de vazamentos"
+    ],
     "plan": "gratuito",
     "verified": false,
     "createdAt": "2024-03-01T10:00:00.000Z",
@@ -87,7 +109,13 @@
     "phone": "(48) 3344-5566",
     "email": "contato@revestudio.com.br",
     "website": "https://revestudio.com.br",
-    "services": ["Porcelanato e cerâmica", "Pedras naturais", "Marmoraria", "Pintura especializada", "Drywall e gesso"],
+    "services": [
+      "Porcelanato e cerâmica",
+      "Pedras naturais",
+      "Marmoraria",
+      "Pintura especializada",
+      "Drywall e gesso"
+    ],
     "plan": "premium",
     "verified": true,
     "createdAt": "2024-01-28T10:00:00.000Z",
@@ -106,7 +134,13 @@
     "phone": "(19) 3211-4455",
     "email": "projetos@aeaprojetos.com.br",
     "website": "https://aeaprojetos.com.br",
-    "services": ["Projetos arquitetônicos", "Projetos estruturais", "Projetos elétricos e hidráulicos", "Consultoria técnica", "Laudos e vistorias"],
+    "services": [
+      "Projetos arquitetônicos",
+      "Projetos estruturais",
+      "Projetos elétricos e hidráulicos",
+      "Consultoria técnica",
+      "Laudos e vistorias"
+    ],
     "plan": "verificado",
     "verified": true,
     "createdAt": "2024-02-14T10:00:00.000Z",
@@ -125,7 +159,13 @@
     "phone": "(85) 3456-7890",
     "email": "locacao@equipnordeste.com.br",
     "website": "https://equipnordeste.com.br",
-    "services": ["Andaimes e escoramentos", "Betoneiras e bombas de concreto", "Compressores", "Máquinas pesadas", "Ferramentas elétricas"],
+    "services": [
+      "Andaimes e escoramentos",
+      "Betoneiras e bombas de concreto",
+      "Compressores",
+      "Máquinas pesadas",
+      "Ferramentas elétricas"
+    ],
     "plan": "verificado",
     "verified": true,
     "createdAt": "2024-03-10T10:00:00.000Z",
@@ -144,7 +184,13 @@
     "phone": "(41) 3344-9988",
     "email": "vendas@transparenciaesq.com.br",
     "website": "",
-    "services": ["Esquadrias de alumínio", "Esquadrias de PVC", "Vidros temperados", "Box de banheiro", "Fachadas corporativas"],
+    "services": [
+      "Esquadrias de alumínio",
+      "Esquadrias de PVC",
+      "Vidros temperados",
+      "Box de banheiro",
+      "Fachadas corporativas"
+    ],
     "plan": "gratuito",
     "verified": false,
     "createdAt": "2024-04-01T10:00:00.000Z",
@@ -163,7 +209,12 @@
     "phone": "(91) 3344-2211",
     "email": "contato@nortedesenvolve.com.br",
     "website": "https://nortedesenvolve.com.br",
-    "services": ["Habitação popular", "Obras públicas", "Infraestrutura urbana", "Saneamento básico"],
+    "services": [
+      "Habitação popular",
+      "Obras públicas",
+      "Infraestrutura urbana",
+      "Saneamento básico"
+    ],
     "plan": "verificado",
     "verified": true,
     "createdAt": "2024-02-20T10:00:00.000Z",
@@ -182,7 +233,13 @@
     "phone": "(62) 3322-4455",
     "email": "vendas@comat.com.br",
     "website": "",
-    "services": ["Cimento e cal", "Tijolo e bloco", "Ferragem e aço", "Tintas e vernizes", "Louças e metais"],
+    "services": [
+      "Cimento e cal",
+      "Tijolo e bloco",
+      "Ferragem e aço",
+      "Tintas e vernizes",
+      "Louças e metais"
+    ],
     "plan": "gratuito",
     "verified": false,
     "createdAt": "2024-03-15T10:00:00.000Z",
@@ -201,7 +258,13 @@
     "phone": "(71) 9876-1234",
     "email": "gessoprobahia@gmail.com",
     "website": "",
-    "services": ["Gesso liso e projetado", "Drywall", "Forro de PVC", "Molduras e sancas", "Divisórias"],
+    "services": [
+      "Gesso liso e projetado",
+      "Drywall",
+      "Forro de PVC",
+      "Molduras e sancas",
+      "Divisórias"
+    ],
     "plan": "gratuito",
     "verified": false,
     "createdAt": "2024-04-05T10:00:00.000Z",
@@ -220,7 +283,13 @@
     "phone": "(11) 4002-8922",
     "email": "eng@inovaeng.com.br",
     "website": "https://inovaeng.com.br",
-    "services": ["Projetos BIM", "Cálculo estrutural", "Fundações e sondagem", "Acompanhamento de obra", "Perícia técnica"],
+    "services": [
+      "Projetos BIM",
+      "Cálculo estrutural",
+      "Fundações e sondagem",
+      "Acompanhamento de obra",
+      "Perícia técnica"
+    ],
     "plan": "premium",
     "verified": true,
     "createdAt": "2024-01-05T10:00:00.000Z",
@@ -239,7 +308,12 @@
     "phone": "(27) 3311-2233",
     "email": "solar@solares.com.br",
     "website": "https://solares.com.br",
-    "services": ["Energia solar fotovoltaica", "Instalação elétrica residencial", "Projeto elétrico", "Manutenção preventiva"],
+    "services": [
+      "Energia solar fotovoltaica",
+      "Instalação elétrica residencial",
+      "Projeto elétrico",
+      "Manutenção preventiva"
+    ],
     "plan": "verificado",
     "verified": true,
     "createdAt": "2024-02-28T10:00:00.000Z",
@@ -258,7 +332,12 @@
     "phone": "(34) 3322-5566",
     "email": "contato@alvestrutura.com.br",
     "website": "",
-    "services": ["Alvenaria estrutural", "Construção racionalizada", "Consultoria de obra", "Execução de fundações"],
+    "services": [
+      "Alvenaria estrutural",
+      "Construção racionalizada",
+      "Consultoria de obra",
+      "Execução de fundações"
+    ],
     "plan": "gratuito",
     "verified": false,
     "createdAt": "2024-03-20T10:00:00.000Z",
@@ -277,11 +356,59 @@
     "phone": "(21) 3344-8877",
     "email": "orcamento@impertec.com.br",
     "website": "https://impertec.com.br",
-    "services": ["Impermeabilização de lajes", "Impermeabilização de piscinas", "Tratamento de trincas", "Drenagem", "Pintura epóxi"],
+    "services": [
+      "Impermeabilização de lajes",
+      "Impermeabilização de piscinas",
+      "Tratamento de trincas",
+      "Drenagem",
+      "Pintura epóxi"
+    ],
     "plan": "verificado",
     "verified": true,
     "createdAt": "2024-02-10T10:00:00.000Z",
     "cnae": "4329104",
     "cnaeDescricao": "Impermeabilização em obras de engenharia civil"
+  },
+  {
+    "id": "pmoc1buzajnab",
+    "cnpj": "32.086.364/0001-22",
+    "razaoSocial": "L.V.M. Alexandrino",
+    "nomeFantasia": "L.V.M. Alexandrino",
+    "category": "construtora",
+    "description": "Teste",
+    "state": "SP",
+    "city": "Americana",
+    "phone": "(15) 99788-0599",
+    "email": "leonardo@amdevs.digital",
+    "website": "avysta.com.br",
+    "services": [
+      "Reformas"
+    ],
+    "plan": "gratuito",
+    "verified": false,
+    "createdAt": "2026-04-23T22:10:13.270Z",
+    "cnae": "",
+    "cnaeDescricao": ""
+  },
+  {
+    "id": "pmoc1kid5vxnk",
+    "cnpj": "10.323.676/0001-70",
+    "razaoSocial": "Tiago Drape",
+    "nomeFantasia": "Tiago Drape",
+    "category": "eletrica",
+    "description": "isto é um teste",
+    "state": "SP",
+    "city": "Americana",
+    "phone": "(19) 99573-7370",
+    "email": "tiago@avysta.com.br",
+    "website": "avysta.com.br",
+    "services": [
+      "Teste"
+    ],
+    "plan": "gratuito",
+    "verified": false,
+    "createdAt": "2026-04-23T22:16:56.825Z",
+    "cnae": "",
+    "cnaeDescricao": ""
   }
 ]

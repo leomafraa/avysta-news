@@ -278,7 +278,7 @@ export async function fetchINCCFromBCB(): Promise<INCCData> {
   const raw: BCBDataPoint[] = await res.json();
 
   const history: INCCDataPoint[] = raw.map((p) => {
-    const [day, month, year] = p.data.split("/");
+    const [, month, year] = p.data.split("/");
     return {
       date: `${month}/${year}`,
       value: parseFloat(p.valor),
@@ -335,12 +335,6 @@ export function buildMaterialsWithPrices(
   return MATERIALS.map((m) => {
     const currentPrice = parseFloat((m.basePrice * factor).toFixed(2));
     const variation12m = incc.accumulated12m;
-    // Monthly variation spreads unevenly — approximate 30-day delta
-    const variation30d = parseFloat(
-      (m.basePrice * (factor - 1 + incc.latest / 100) - m.basePrice * (factor - 1)).toFixed(2)
-        .replace(/[^0-9.-]/g, "") || incc.latest.toFixed(2)
-    );
-
     const trend: Trend =
       incc.latest > 0.5 ? "alta" : incc.latest < 0.1 ? "queda" : "estavel";
 

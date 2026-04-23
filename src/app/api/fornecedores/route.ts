@@ -74,7 +74,7 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
 
-    const required = ["nomeFantasia", "cnpj", "category", "state", "city", "phone", "email"];
+    const required = ["nomeFantasia", "cnpj", "category", "phone", "email"];
     for (const field of required) {
       if (!body[field]?.toString().trim()) {
         return NextResponse.json(

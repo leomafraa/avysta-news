@@ -91,7 +91,7 @@ export function FornecedoresClient() {
     setCategory(cat);
     setPage(1);
     const p = new URLSearchParams(searchParams.toString());
-    cat === "todos" ? p.delete("category") : p.set("category", cat);
+    if (cat === "todos") { p.delete("category"); } else { p.set("category", cat); }
     router.push(`/fornecedores?${p}`, { scroll: false });
   }
 
@@ -99,7 +99,7 @@ export function FornecedoresClient() {
     setState(s);
     setPage(1);
     const p = new URLSearchParams(searchParams.toString());
-    s ? p.set("state", s) : p.delete("state");
+    if (s) { p.set("state", s); } else { p.delete("state"); }
     router.push(`/fornecedores?${p}`, { scroll: false });
   }
 

@@ -1,5 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  experimental: {
+    // Force single-worker build to avoid race conditions on macOS
+    cpus: 1,
+  },
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "**" },

@@ -180,7 +180,7 @@ export function NewsGrid() {
           <span className="text-4xl">⚠️</span>
           <p className="text-gray-600 dark:text-gray-400 max-w-sm">{error}</p>
           <button
-            onClick={() => fetchNews({ search, category, page })}
+            onClick={() => fetchNews({ search, category, state, page })}
             className="flex items-center gap-2 px-4 py-2 bg-brand-500 text-white rounded-lg hover:bg-brand-600 transition-colors text-sm font-medium"
           >
             <RefreshIcon className="w-4 h-4" />

@@ -4,7 +4,7 @@ import { FornecedoresClient } from "./FornecedoresClient";
 import { RefreshIcon } from "@/components/Icons";
 
 export const metadata: Metadata = {
-  title: "Fornecedores e Prestadores | Avysta News",
+  title: "Fornecedores e Prestadores | Avysta Community",
   description:
     "Diretório de construtoras, fornecedores de materiais e prestadores de serviços para construção civil no Brasil. Encontre parceiros verificados por estado e categoria.",
   keywords: [

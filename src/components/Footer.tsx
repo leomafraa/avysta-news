@@ -72,7 +72,7 @@ export function Footer() {
         <div className="mt-10 pt-6 border-t border-gray-100 dark:border-gray-800 flex items-center justify-center">
           <p className="text-xs text-gray-400 dark:text-gray-600 flex items-center gap-1.5">
             <NewspaperIcon className="w-3.5 h-3.5" />
-            © {new Date().getFullYear()} Avysta News. Todos os direitos reservados.
+            © {new Date().getFullYear()} Avysta Community. Todos os direitos reservados.
           </p>
         </div>
       </div>

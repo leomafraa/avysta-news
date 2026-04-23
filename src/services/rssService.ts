@@ -13,7 +13,7 @@ const parser = new Parser({
   timeout: 10000,
   headers: {
     "User-Agent":
-      "Mozilla/5.0 (compatible; AvystaNewsBot/1.0; +https://avysta.com.br)",
+      "Mozilla/5.0 (compatible; AvystaCommunityBot/1.0; +https://avysta.com.br)",
     Accept: "application/rss+xml, application/xml, text/xml, */*",
   },
 });
@@ -263,13 +263,15 @@ async function parseFeed(
         "";
       const summary = cleanHtml(rawSummary).substring(0, 300);
       const content = cleanHtml(
-        item["content:encoded"] || item.content || item.summary || summary
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (item as any)["content:encoded"] || item.content || item.summary || summary
       );
 
       const sourceUrl = item.link;
       const id = generateId(title, sourceUrl);
       const slug = generateSlug(title, id);
-      const imageUrl = extractImageUrl(item as Record<string, unknown>);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const imageUrl = extractImageUrl(item as unknown as Record<string, unknown>);
 
       const category = detectCategory(title, summary, config.category);
       const publishedAt = item.pubDate
