@@ -228,7 +228,7 @@ export function CotacoesClient() {
                 type="text"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                placeholder="Buscar material..."
+                placeholder="Buscar materiais ou serviços..."
                 className="w-full pl-9 pr-4 py-2.5 text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 shadow-sm"
               />
             </div>

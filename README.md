@@ -177,12 +177,9 @@ Edite a constante `PAGE_SIZE` em `src/app/api/news/route.ts`.
 
 ## 🗺️ Roadmap (Features futuras)
 
-- [ ] Login de usuários (NextAuth.js)
 - [ ] Área Premium com conteúdo exclusivo
 - [ ] Newsletter por email (Resend / SendGrid)
 - [ ] Alertas personalizados por categoria
-- [ ] App mobile (React Native / Expo)
-- [ ] Infinite scroll
 - [ ] Favoritos locais
 - [ ] Compartilhamento social
 

@@ -33,6 +33,7 @@ export default function LandingPage() {
   const [form, setForm] = useState({ name: "", email: "", phone: "" });
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
 
   useEffect(() => {
     if (!loading && user) router.replace("/noticias");
@@ -48,6 +49,7 @@ export default function LandingPage() {
     if (!name.trim()) { setError("Informe seu nome."); return; }
     if (!email.trim()) { setError("Informe seu e-mail."); return; }
     if (!phone.trim()) { setError("Informe seu telefone."); return; }
+    if (!acceptedTerms) { setError("Você precisa aceitar os Termos e Condições para continuar."); return; }
     setSubmitting(true);
     setError("");
     try {
@@ -219,11 +221,36 @@ export default function LandingPage() {
                 />
               </div>
 
+              <label className="flex items-start gap-3 cursor-pointer group">
+                <div className="relative flex-shrink-0 mt-0.5">
+                  <input
+                    type="checkbox"
+                    checked={acceptedTerms}
+                    onChange={(e) => { setAcceptedTerms(e.target.checked); if (e.target.checked) setError(""); }}
+                    className="sr-only peer"
+                  />
+                  <div className="w-5 h-5 rounded border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 peer-checked:bg-brand-500 peer-checked:border-brand-500 transition-colors flex items-center justify-center">
+                    {acceptedTerms && (
+                      <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+                      </svg>
+                    )}
+                  </div>
+                </div>
+                <span className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">
+                  Li e concordo com os{" "}
+                  <Link href="/termos" target="_blank" className="text-brand-500 hover:text-brand-600 font-semibold underline underline-offset-2">
+                    Termos e Condições
+                  </Link>{" "}
+                  de uso da plataforma Avysta Community.
+                </span>
+              </label>
+
               {error && (
                 <p className="text-xs text-red-500 bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-800/30 rounded-lg px-3 py-2">⚠️ {error}</p>
               )}
 
-              <button type="submit" disabled={submitting} className="w-full py-3 bg-brand-500 hover:bg-brand-600 disabled:opacity-60 text-white font-bold rounded-xl transition-colors text-sm">
+              <button type="submit" disabled={submitting || !acceptedTerms} className="w-full py-3 bg-brand-500 hover:bg-brand-600 disabled:opacity-60 text-white font-bold rounded-xl transition-colors text-sm">
                 {submitting ? "Criando conta..." : "✓ Criar conta grátis"}
               </button>
 

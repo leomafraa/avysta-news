@@ -8,7 +8,7 @@ import { useAuth } from "./AuthProvider";
 import { SunIcon, MoonIcon } from "./Icons";
 
 const navLinks = [
-  { href: "/noticias", label: "Notícias" },
+  { href: "/noticias", label: "📰 Notícias" },
   { href: "/cotacoes", label: "💹 Cotações" },
   { href: "/fornecedores", label: "🏗️ Fornecedores" },
 ];

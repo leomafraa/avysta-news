@@ -7,6 +7,7 @@ import { ProviderRegisterModal } from "@/components/ProviderRegisterModal";
 import { Pagination } from "@/components/Pagination";
 import { RefreshIcon } from "@/components/Icons";
 import { BRAZIL_STATES } from "@/lib/states";
+import { useAuth } from "@/components/AuthProvider";
 import type { Provider, ProvidersApiResponse, ProviderCategory } from "@/types/providers";
 
 const CATEGORIES: { value: ProviderCategory; label: string; emoji: string }[] = [
@@ -25,6 +26,8 @@ const CATEGORIES: { value: ProviderCategory; label: string; emoji: string }[] = 
 export function FornecedoresClient() {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const { user } = useAuth();
+  const isFornecedor = user?.type === "fornecedor";
 
   const [providers, setProviders] = useState<Provider[]>([]);
   const [stats, setStats] = useState({ total: 0, verified: 0, states: 0, categories: 0 });
@@ -126,12 +129,14 @@ export function FornecedoresClient() {
               verificados em todo o Brasil.
             </p>
           </div>
-          <button
-            onClick={() => setShowModal(true)}
-            className="flex-shrink-0 flex items-center gap-2 px-5 py-3 bg-brand-500 hover:bg-brand-600 active:bg-brand-700 text-white font-semibold rounded-xl transition-colors shadow-md shadow-brand-500/25 text-sm"
-          >
-            + Cadastrar minha empresa
-          </button>
+          {isFornecedor && (
+            <button
+              onClick={() => setShowModal(true)}
+              className="flex-shrink-0 flex items-center gap-2 px-5 py-3 bg-brand-500 hover:bg-brand-600 active:bg-brand-700 text-white font-semibold rounded-xl transition-colors shadow-md shadow-brand-500/25 text-sm"
+            >
+              + Cadastrar minha empresa
+            </button>
+          )}
         </div>
       </section>
 
@@ -274,12 +279,14 @@ export function FornecedoresClient() {
           <p className="text-gray-500 dark:text-gray-400 text-sm mb-4">
             Tente outros filtros ou seja o primeiro a cadastrar nessa categoria!
           </p>
-          <button
-            onClick={() => setShowModal(true)}
-            className="text-sm text-brand-500 hover:text-brand-600 font-medium underline underline-offset-2"
-          >
-            Cadastrar minha empresa →
-          </button>
+          {isFornecedor && (
+            <button
+              onClick={() => setShowModal(true)}
+              className="text-sm text-brand-500 hover:text-brand-600 font-medium underline underline-offset-2"
+            >
+              Cadastrar minha empresa →
+            </button>
+          )}
         </div>
       )}
 
@@ -308,7 +315,7 @@ export function FornecedoresClient() {
       )}
 
       {/* Bottom CTA */}
-      {!loading && (
+      {!loading && isFornecedor && (
         <div className="mt-16 bg-gradient-to-br from-brand-50 to-orange-50 dark:from-brand-950/20 dark:to-orange-950/20 border border-brand-100 dark:border-brand-800/30 rounded-2xl p-8 text-center">
           <h2 className="text-2xl font-extrabold text-gray-900 dark:text-white mb-2">
             Sua empresa ainda não está aqui?
