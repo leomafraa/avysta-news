@@ -38,3 +38,12 @@ export async function createUser(user: User): Promise<void> {
   users.push(user);
   await writeUsers(users);
 }
+
+export async function updateUser(id: string, patch: Partial<User>): Promise<User | null> {
+  const users = await readUsers();
+  const idx = users.findIndex((u) => u.id === id);
+  if (idx === -1) return null;
+  users[idx] = { ...users[idx], ...patch };
+  await writeUsers(users);
+  return users[idx];
+}

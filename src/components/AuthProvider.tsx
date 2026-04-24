@@ -24,11 +24,12 @@ interface AuthContext {
   loading: boolean;
   login: (token: string, user: UserPublic) => void;
   logout: () => void;
+  refreshUser: () => Promise<void>;
 }
 
 const Ctx = createContext<AuthContext>({
   user: null, token: null, loading: true,
-  login: () => {}, logout: () => {},
+  login: () => {}, logout: () => {}, refreshUser: async () => {},
 });
 
 export function useAuth() {
@@ -80,8 +81,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null);
   }, []);
 
+  const refreshUser = useCallback(async () => {
+    const saved = localStorage.getItem(TOKEN_KEY);
+    if (!saved) return;
+    try {
+      const r = await fetch("/api/auth/me", { headers: { Authorization: `Bearer ${saved}` } });
+      if (r.ok) {
+        const data = await r.json();
+        if (data?.user) setUser(data.user);
+      }
+    } catch {
+      // silently ignore
+    }
+  }, []);
+
   return (
-    <Ctx.Provider value={{ user, token, loading, login, logout }}>
+    <Ctx.Provider value={{ user, token, loading, login, logout, refreshUser }}>
       {children}
     </Ctx.Provider>
   );

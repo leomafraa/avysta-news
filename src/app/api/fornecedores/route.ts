@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { readProviders, addProvider, generateId } from "@/lib/providersStore";
+import { verifyToken, toPublic } from "@/lib/auth";
+import { findUserById, updateUser } from "@/lib/usersStore";
 import type { ProvidersApiResponse, Provider, ProviderCategory } from "@/types/providers";
 
 const PAGE_SIZE = 12;
@@ -72,6 +74,29 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
+    // Authenticate
+    const token = request.cookies.get("avysta_auth")?.value
+      || request.headers.get("Authorization")?.replace("Bearer ", "");
+    const payload = token ? verifyToken(token) : null;
+    if (!payload) {
+      return NextResponse.json({ error: "Não autorizado." }, { status: 401 });
+    }
+
+    const dbUser = await findUserById(payload.userId);
+    if (!dbUser) {
+      return NextResponse.json({ error: "Usuário não encontrado." }, { status: 401 });
+    }
+
+    // Only fornecedor can register a company
+    if (dbUser.type !== "fornecedor") {
+      return NextResponse.json({ error: "Apenas fornecedores podem cadastrar empresas." }, { status: 403 });
+    }
+
+    // Prevent duplicate company per user
+    if (dbUser.providerId) {
+      return NextResponse.json({ error: "Você já possui uma empresa cadastrada. Use a opção de editar." }, { status: 409 });
+    }
+
     const body = await request.json();
 
     const required = ["nomeFantasia", "cnpj", "category", "phone", "email"];
@@ -96,6 +121,7 @@ export async function POST(request: NextRequest) {
 
     const newProvider: Provider = {
       id: generateId(),
+      userId: dbUser.id,
       cnpj: body.cnpj,
       razaoSocial: body.razaoSocial || body.nomeFantasia,
       nomeFantasia: body.nomeFantasia,
@@ -116,7 +142,13 @@ export async function POST(request: NextRequest) {
 
     await addProvider(newProvider);
 
-    return NextResponse.json(newProvider, { status: 201 });
+    // Link provider to user
+    const updatedUser = await updateUser(dbUser.id, { providerId: newProvider.id });
+
+    return NextResponse.json(
+      { provider: newProvider, user: updatedUser ? toPublic(updatedUser) : undefined },
+      { status: 201 }
+    );
   } catch (error) {
     console.error("[API /fornecedores] POST error:", error);
     return NextResponse.json({ error: "Erro ao cadastrar." }, { status: 500 });

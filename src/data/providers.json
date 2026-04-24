@@ -410,5 +410,46 @@
     "createdAt": "2026-04-23T22:16:56.825Z",
     "cnae": "",
     "cnaeDescricao": ""
+  },
+  {
+    "id": "pmoczs9zunaq9",
+    "cnpj": "19.028.390/1283-09",
+    "razaoSocial": "testeeeee",
+    "nomeFantasia": "testeeeee",
+    "category": "construtora",
+    "description": "Teste",
+    "state": "SP",
+    "city": "Americana",
+    "phone": "(19) 98989-8989",
+    "email": "gustavo@avysta.com.br",
+    "website": "avysta.com.br",
+    "services": [],
+    "plan": "gratuito",
+    "verified": false,
+    "createdAt": "2026-04-24T14:14:46.170Z",
+    "cnae": "",
+    "cnaeDescricao": ""
+  },
+  {
+    "id": "pmod092rkfqi9",
+    "userId": "umocz5s0t90b143",
+    "cnpj": "28.039.812/9038-21",
+    "razaoSocial": "oioi",
+    "nomeFantasia": "oioi",
+    "category": "construtora",
+    "description": "this is a test",
+    "state": "SP",
+    "city": "Americana",
+    "phone": "(19) 38947-3984",
+    "email": "leonardo@amdevs.digital",
+    "website": "avysta.com.br",
+    "services": [
+      "teste"
+    ],
+    "plan": "gratuito",
+    "verified": false,
+    "createdAt": "2026-04-24T14:27:49.952Z",
+    "cnae": "",
+    "cnaeDescricao": ""
   }
 ]

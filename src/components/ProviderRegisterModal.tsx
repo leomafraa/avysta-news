@@ -39,9 +39,12 @@ function maskPhone(value: string): string {
 }
 
 // ── Types ──────────────────────────────────────────────
+import type { Provider } from "@/types/providers";
+
 interface Props {
   onClose: () => void;
   onSuccess: () => void;
+  initialData?: Provider;
 }
 
 type Step = 1 | 2 | 3;
@@ -63,17 +66,26 @@ interface FormData {
 const INPUT_CLASS =
   "w-full px-4 py-3 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-500 text-sm";
 
-export function ProviderRegisterModal({ onClose, onSuccess }: Props) {
-  const [step, setStep] = useState<Step>(1);
+export function ProviderRegisterModal({ onClose, onSuccess, initialData }: Props) {
+  const isEditMode = !!initialData;
+  const [step, setStep] = useState<Step>(isEditMode ? 2 : 1);
   const [cnpjError, setCnpjError] = useState("");
   const [step3Error, setStep3Error] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
 
   const [form, setForm] = useState<FormData>({
-    cnpj: "", nomeFantasia: "", razaoSocial: "", category: "",
-    state: "", city: "", phone: "", email: "", website: "",
-    description: "", services: "",
+    cnpj: initialData?.cnpj ?? "",
+    nomeFantasia: initialData?.nomeFantasia ?? "",
+    razaoSocial: initialData?.razaoSocial ?? "",
+    category: initialData?.category ?? "",
+    state: initialData?.state ?? "",
+    city: initialData?.city ?? "",
+    phone: initialData?.phone ?? "",
+    email: initialData?.email ?? "",
+    website: initialData?.website ?? "",
+    description: initialData?.description ?? "",
+    services: initialData?.services?.join(", ") ?? "",
   });
 
   function set(field: keyof FormData, value: string) {
@@ -109,14 +121,21 @@ export function ProviderRegisterModal({ onClose, onSuccess }: Props) {
     setSubmitError("");
     try {
       const services = form.services.split(",").map((s) => s.trim()).filter(Boolean);
-      const res = await fetch("/api/fornecedores", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, razaoSocial: form.razaoSocial || form.nomeFantasia, services }),
-      });
+      const body = { ...form, razaoSocial: form.razaoSocial || form.nomeFantasia, services };
+      const res = isEditMode
+        ? await fetch(`/api/fornecedores/${initialData!.id}`, {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(body),
+          })
+        : await fetch("/api/fornecedores", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(body),
+          });
       const data = await res.json();
       if (!res.ok) {
-        setSubmitError(data.error || "Erro ao cadastrar.");
+        setSubmitError(data.error || (isEditMode ? "Erro ao atualizar." : "Erro ao cadastrar."));
         return;
       }
       onSuccess();
@@ -134,8 +153,12 @@ export function ProviderRegisterModal({ onClose, onSuccess }: Props) {
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-gray-100 dark:border-gray-800">
           <div>
-            <h2 className="text-lg font-bold text-gray-900 dark:text-white">Cadastrar empresa</h2>
-            <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">Etapa {step} de 3</p>
+            <h2 className="text-lg font-bold text-gray-900 dark:text-white">
+              {isEditMode ? "Editar empresa" : "Cadastrar empresa"}
+            </h2>
+            <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">
+              {isEditMode ? `Etapa ${step - 1} de 2` : `Etapa ${step} de 3`}
+            </p>
           </div>
           <button
             onClick={onClose}
@@ -147,13 +170,16 @@ export function ProviderRegisterModal({ onClose, onSuccess }: Props) {
 
         {/* Progress */}
         <div className="h-1 bg-gray-100 dark:bg-gray-800">
-          <div className="h-1 bg-brand-500 transition-all duration-300" style={{ width: `${(step / 3) * 100}%` }} />
+          <div
+            className="h-1 bg-brand-500 transition-all duration-300"
+            style={{ width: isEditMode ? `${((step - 1) / 2) * 100}%` : `${(step / 3) * 100}%` }}
+          />
         </div>
 
         <div className="p-6 space-y-5">
 
-          {/* ── STEP 1: CNPJ ── */}
-          {step === 1 && (
+          {/* ── STEP 1: CNPJ (create only) ── */}
+          {step === 1 && !isEditMode && (
             <>
               <p className="text-sm text-gray-600 dark:text-gray-400">
                 Digite o CNPJ da sua empresa para iniciar o cadastro.
@@ -236,9 +262,11 @@ export function ProviderRegisterModal({ onClose, onSuccess }: Props) {
               </div>
 
               <div className="flex gap-3">
-                <button onClick={() => setStep(1)} className="flex-1 py-3 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 font-medium rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-sm">
-                  ← Voltar
-                </button>
+                {!isEditMode && (
+                  <button onClick={() => setStep(1)} className="flex-1 py-3 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 font-medium rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-sm">
+                    ← Voltar
+                  </button>
+                )}
                 <button
                   onClick={() => { if (form.category) setStep(3); }}
                   disabled={!form.category}
@@ -366,7 +394,9 @@ export function ProviderRegisterModal({ onClose, onSuccess }: Props) {
                   disabled={submitting}
                   className="flex-1 py-3 bg-brand-500 hover:bg-brand-600 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold rounded-xl transition-colors text-sm"
                 >
-                  {submitting ? "Cadastrando..." : "✓ Cadastrar empresa"}
+                  {submitting
+                    ? (isEditMode ? "Salvando..." : "Cadastrando...")
+                    : (isEditMode ? "✓ Salvar alterações" : "✓ Cadastrar empresa")}
                 </button>
               </div>
 

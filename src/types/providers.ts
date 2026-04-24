@@ -14,6 +14,7 @@ export type ProviderPlan = "gratuito" | "verificado" | "premium";
 
 export interface Provider {
   id: string;
+  userId?: string;
   cnpj: string;
   razaoSocial: string;
   nomeFantasia: string;
