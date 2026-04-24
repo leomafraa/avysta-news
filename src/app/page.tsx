@@ -87,7 +87,7 @@ export default function LandingPage() {
           </div>
 
           <h1 className="text-4xl sm:text-5xl font-extrabold leading-tight mb-6">
-            A comunidade da<br />
+            A maior comunidade da<br />
             <span className="text-brand-200">construção civil</span><br />
             no Brasil
           </h1>
@@ -140,11 +140,10 @@ export default function LandingPage() {
                   key={t.value}
                   type="button"
                   onClick={() => { setType(t.value); setError(""); }}
-                  className={`w-full flex items-start gap-4 p-4 rounded-xl border-2 text-left transition-all ${
-                    type === t.value
+                  className={`w-full flex items-start gap-4 p-4 rounded-xl border-2 text-left transition-all ${type === t.value
                       ? "border-brand-500 bg-brand-50 dark:bg-brand-900/20"
                       : "border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 hover:border-brand-300"
-                  }`}
+                    }`}
                 >
                   <span className="text-3xl">{t.emoji}</span>
                   <div className="flex-1">
