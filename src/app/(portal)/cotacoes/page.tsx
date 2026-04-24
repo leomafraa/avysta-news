@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { CotacoesClient } from "./CotacoesClient";
+import { CotacoesClient } from "@/app/cotacoes/CotacoesClient";
 
 export const metadata: Metadata = {
   title: "Cotações de Materiais | Avysta Community",

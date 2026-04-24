@@ -8,12 +8,12 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
           {/* Brand */}
           <div className="space-y-3">
-            <Link href="/" className="flex items-center gap-2">
+            <Link href="/noticias" className="flex items-center gap-2">
               <div className="w-7 h-7 bg-gradient-to-br from-brand-500 to-brand-700 rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-xs">A</span>
               </div>
               <span className="font-bold text-lg text-gray-900 dark:text-white">
-                avysta<span className="text-brand-500 font-light">news</span>
+                avysta<span className="text-brand-500 font-light">community</span>
               </span>
             </Link>
             <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed max-w-xs">
@@ -28,12 +28,12 @@ export function Footer() {
             </h3>
             <ul className="space-y-2">
               {[
-                { href: "/?category=materiais", label: "Materiais de Construção" },
-                { href: "/?category=mercado", label: "Mercado Imobiliário" },
-                { href: "/?category=infraestrutura", label: "Infraestrutura" },
-                { href: "/?category=tecnologia", label: "Tecnologia" },
-                { href: "/?category=sustentabilidade", label: "Sustentabilidade" },
-                { href: "/?category=financiamento", label: "Financiamento" },
+                { href: "/noticias?category=materiais", label: "Materiais de Construção" },
+                { href: "/noticias?category=mercado", label: "Mercado Imobiliário" },
+                { href: "/noticias?category=infraestrutura", label: "Infraestrutura" },
+                { href: "/noticias?category=tecnologia", label: "Tecnologia" },
+                { href: "/noticias?category=sustentabilidade", label: "Sustentabilidade" },
+                { href: "/noticias?category=financiamento", label: "Financiamento" },
               ].map(({ href, label }) => (
                 <li key={href}>
                   <Link

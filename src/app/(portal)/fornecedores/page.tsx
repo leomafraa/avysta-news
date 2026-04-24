@@ -1,20 +1,12 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import { FornecedoresClient } from "./FornecedoresClient";
+import { FornecedoresClient } from "@/app/fornecedores/FornecedoresClient";
 import { RefreshIcon } from "@/components/Icons";
 
 export const metadata: Metadata = {
   title: "Fornecedores e Prestadores | Avysta Community",
   description:
-    "Diretório de construtoras, fornecedores de materiais e prestadores de serviços para construção civil no Brasil. Encontre parceiros verificados por estado e categoria.",
-  keywords: [
-    "fornecedores construção civil",
-    "construtoras brasil",
-    "materiais de construção",
-    "prestadores de serviços obra",
-    "empreiteiras",
-    "engenharia civil",
-  ],
+    "Diretório de construtoras, fornecedores de materiais e prestadores de serviços para construção civil no Brasil.",
 };
 
 export default function FornecedoresPage() {
