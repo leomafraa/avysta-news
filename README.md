@@ -85,6 +85,38 @@ src/
     └── news.ts             # Tipos TypeScript
 ```
 
+## 🗄️ Armazenamento de Dados
+
+O projeto usa arquivos JSON como banco de dados em memória/disco (sem banco externo). Os dados ficam em `src/data/`:
+
+| Arquivo | O que armazena | Store |
+|---|---|---|
+| `src/data/users.json` | Todos os usuários — compradores e fornecedores — diferenciados pelo campo `type` | `src/lib/usersStore.ts` |
+| `src/data/providers.json` | Empresas cadastradas no diretório de fornecedores | `src/lib/providersStore.ts` |
+
+### Relação entre usuários e empresas
+
+Compradores e fornecedores compartilham a mesma tabela de usuários. O campo `type` define o perfil:
+
+```json
+{ "id": "u123", "name": "João Silva", "type": "comprador", ... }
+{ "id": "u456", "name": "Maria Costa", "type": "fornecedor", "providerId": "p789", ... }
+```
+
+Quando um fornecedor cadastra sua empresa, o campo `providerId` é preenchido com o ID correspondente em `providers.json`. Cada fornecedor pode ter **no máximo uma empresa** cadastrada.
+
+```
+users.json          providers.json
+┌──────────────┐    ┌─────────────────────┐
+│ id: "u456"   │    │ id: "p789"          │
+│ type: "forn."│───▶│ userId: "u456"      │
+│ providerId: ─┼───▶│ nomeFantasia: "..." │
+│   "p789"     │    │ cnpj: "..."         │
+└──────────────┘    └─────────────────────┘
+```
+
+> **Nota:** Para produção, recomenda-se substituir os arquivos JSON por um banco de dados real (PostgreSQL, MongoDB, etc.).
+
 ## 🔌 API Interna
 
 ### `GET /api/news`
@@ -116,34 +148,144 @@ Retorna lista de notícias paginada e filtrada.
 
 Retorna um item de notícia pelo slug.
 
-## 🌐 Deploy
+## 🌐 Deploy & Hospedagem
 
-### Vercel (recomendado)
+### Opções de host recomendadas
+
+| Plataforma | Plano gratuito | Ideal para | Observação |
+|---|---|---|---|
+| [Vercel](https://vercel.com) | ✅ Sim | Produção (Next.js nativo) | Deploy automático por push |
+| [Railway](https://railway.app) | ✅ Sim (limitado) | Produção com banco de dados | Suporte a volumes persistentes |
+| [Render](https://render.com) | ✅ Sim | Staging / produção | Deploy via Dockerfile ou Node |
+| [Fly.io](https://fly.io) | ✅ Sim (limitado) | Produção global | Deploy via CLI |
+
+### Deploy na Vercel (recomendado)
 
 ```bash
-# Instalar CLI da Vercel
+# 1. Instalar CLI
 npm i -g vercel
 
-# Deploy
+# 2. Login
+vercel login
+
+# 3. Deploy de preview (branch atual)
 vercel
 
-# Deploy em produção
+# 4. Deploy em produção
 vercel --prod
 ```
 
-### Railway / Render / Fly.io
+> A Vercel detecta automaticamente projetos Next.js. Basta conectar o repositório GitHub em [vercel.com/new](https://vercel.com/new) para ter deploy automático a cada push.
+
+### Deploy em Railway / Render / Fly.io
 
 ```bash
 npm run build
 npm run start
 ```
 
-### Variáveis de ambiente (opcional)
+### Variáveis de ambiente
 
-Crie um arquivo `.env.local`:
+Crie um arquivo `.env.local` para desenvolvimento local:
 
 ```env
 NEXT_PUBLIC_BASE_URL=https://seudominio.com.br
+AUTH_SECRET=seu-segredo-jwt-aqui
+```
+
+Configure as mesmas variáveis no painel da plataforma escolhida (Vercel → Settings → Environment Variables, Railway → Variables, etc.).
+
+---
+
+## ⚙️ CI/CD
+
+### Fluxo recomendado (GitHub Actions + Vercel)
+
+```
+push / pull request
+        │
+        ▼
+┌───────────────────┐
+│  GitHub Actions   │  lint + type-check + build
+└────────┬──────────┘
+         │ aprovado
+         ▼
+┌───────────────────┐
+│  Vercel Preview   │  deploy automático de PR (URL única por branch)
+└────────┬──────────┘
+         │ merge na main
+         ▼
+┌───────────────────┐
+│ Vercel Production │  deploy automático em produção
+└───────────────────┘
+```
+
+### Configurar GitHub Actions
+
+Crie o arquivo `.github/workflows/ci.yml` no repositório:
+
+```yaml
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Type check
+        run: npx tsc --noEmit
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Build
+        run: npm run build
+        env:
+          NEXT_PUBLIC_BASE_URL: ${{ secrets.NEXT_PUBLIC_BASE_URL }}
+          AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
+```
+
+### Configurar secrets no GitHub
+
+Acesse **Settings → Secrets and variables → Actions** no repositório e adicione:
+
+| Secret | Descrição |
+|---|---|
+| `AUTH_SECRET` | Chave secreta para assinar os tokens JWT |
+| `NEXT_PUBLIC_BASE_URL` | URL pública da aplicação em produção |
+
+### Deploy automático via Vercel + GitHub
+
+1. Acesse [vercel.com/new](https://vercel.com/new) e importe o repositório
+2. A Vercel cria automaticamente:
+   - **Production** → deploy a cada push na branch `main`
+   - **Preview** → deploy a cada Pull Request (URL única por PR)
+3. As variáveis de ambiente configuradas na Vercel são injetadas automaticamente no build
+
+### Estratégia de branches sugerida
+
+```
+main        → produção (deploy automático)
+develop     → staging / homologação
+feature/*   → desenvolvimento de funcionalidades (PR → develop)
+fix/*       → correções (PR → main ou develop)
 ```
 
 ## 🔧 Personalização
