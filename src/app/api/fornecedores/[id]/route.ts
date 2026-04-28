@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { readProviders, writeProviders } from "@/lib/providersStore";
+import { findProviderById, updateProvider } from "@/lib/providersStore";
 import { verifyToken } from "@/lib/auth";
 import { findUserById } from "@/lib/usersStore";
 import type { Provider } from "@/types/providers";
@@ -9,8 +9,7 @@ type Params = { params: Promise<{ id: string }> };
 export async function GET(_request: NextRequest, { params }: Params) {
   const { id } = await params;
   try {
-    const all = await readProviders();
-    const provider = all.find((p) => p.id === id);
+    const provider = await findProviderById(id);
     if (!provider) {
       return NextResponse.json({ error: "Empresa não encontrada." }, { status: 404 });
     }
@@ -42,9 +41,8 @@ export async function PATCH(request: NextRequest, { params }: Params) {
       return NextResponse.json({ error: "Você não tem permissão para editar esta empresa." }, { status: 403 });
     }
 
-    const all = await readProviders();
-    const idx = all.findIndex((p) => p.id === id);
-    if (idx === -1) {
+    const existing = await findProviderById(id);
+    if (!existing) {
       return NextResponse.json({ error: "Empresa não encontrada." }, { status: 404 });
     }
 
@@ -68,10 +66,12 @@ export async function PATCH(request: NextRequest, { params }: Params) {
       patch.services = Array.isArray(body.services) ? body.services : [];
     }
 
-    all[idx] = { ...all[idx], ...patch };
-    await writeProviders(all);
+    const updated = await updateProvider(id, patch);
+    if (!updated) {
+      return NextResponse.json({ error: "Empresa não encontrada." }, { status: 404 });
+    }
 
-    return NextResponse.json(all[idx]);
+    return NextResponse.json(updated);
   } catch (error) {
     console.error("[API /fornecedores/[id]] PATCH error:", error);
     return NextResponse.json({ error: "Erro ao atualizar empresa." }, { status: 500 });
