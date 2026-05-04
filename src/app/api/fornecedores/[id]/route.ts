@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { findProviderById, updateProvider } from "@/lib/providersStore";
-import { verifyToken } from "@/lib/auth";
-import { findUserById } from "@/lib/usersStore";
+import { uploadProviderLogoFromDataUrl, MSG_PROVIDER_SAVE_FAILED } from "@/lib/providerLogoUpload";
+import { getBearerToken, getUserFromAccessToken } from "@/lib/session";
 import type { Provider } from "@/types/providers";
 
 type Params = { params: Promise<{ id: string }> };
@@ -24,16 +24,10 @@ export async function PATCH(request: NextRequest, { params }: Params) {
   const { id } = await params;
   try {
     // Authenticate
-    const token = request.cookies.get("avysta_auth")?.value
-      || request.headers.get("Authorization")?.replace("Bearer ", "");
-    const payload = token ? verifyToken(token) : null;
-    if (!payload) {
-      return NextResponse.json({ error: "Não autorizado." }, { status: 401 });
-    }
-
-    const dbUser = await findUserById(payload.userId);
+    const token = getBearerToken(request);
+    const dbUser = token ? await getUserFromAccessToken(token) : null;
     if (!dbUser) {
-      return NextResponse.json({ error: "Usuário não encontrado." }, { status: 401 });
+      return NextResponse.json({ error: "Não autorizado." }, { status: 401 });
     }
 
     // Ensure ownership
@@ -66,6 +60,17 @@ export async function PATCH(request: NextRequest, { params }: Params) {
       patch.services = Array.isArray(body.services) ? body.services : [];
     }
 
+    if (typeof body.logoBase64 === "string" && body.logoBase64.trim()) {
+      const up = await uploadProviderLogoFromDataUrl(id, body.logoBase64.trim());
+      if ("error" in up) {
+        const status = up.error === MSG_PROVIDER_SAVE_FAILED ? 503 : 400;
+        return NextResponse.json({ error: up.error }, { status });
+      }
+      patch.logoUrl = up.url;
+    } else if (body.clearLogo === true) {
+      patch.logoUrl = "";
+    }
+
     const updated = await updateProvider(id, patch);
     if (!updated) {
       return NextResponse.json({ error: "Empresa não encontrada." }, { status: 404 });
@@ -74,6 +79,6 @@ export async function PATCH(request: NextRequest, { params }: Params) {
     return NextResponse.json(updated);
   } catch (error) {
     console.error("[API /fornecedores/[id]] PATCH error:", error);
-    return NextResponse.json({ error: "Erro ao atualizar empresa." }, { status: 500 });
+    return NextResponse.json({ error: MSG_PROVIDER_SAVE_FAILED }, { status: 500 });
   }
 }

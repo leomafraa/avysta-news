@@ -15,6 +15,7 @@ type ProviderRow = {
   phone: string;
   email: string;
   website: string;
+  logo_url: string | null;
   services: string[];
   plan: Provider["plan"];
   verified: boolean;
@@ -41,6 +42,7 @@ function rowToProvider(row: ProviderRow): Provider {
     phone: row.phone,
     email: row.email,
     website: row.website,
+    logoUrl: row.logo_url ?? undefined,
     services: row.services ?? [],
     plan: row.plan,
     verified: row.verified,
@@ -77,6 +79,7 @@ export async function writeProviders(providers: Provider[]): Promise<void> {
     phone: p.phone,
     email: p.email,
     website: p.website,
+    logo_url: p.logoUrl ?? null,
     services: p.services,
     plan: p.plan,
     verified: p.verified,
@@ -111,6 +114,7 @@ export async function addProvider(provider: Provider): Promise<void> {
       phone: provider.phone,
       email: provider.email,
       website: provider.website,
+      logo_url: provider.logoUrl ?? null,
       services: provider.services,
       plan: provider.plan,
       verified: provider.verified,
@@ -155,6 +159,9 @@ export async function updateProvider(id: string, patch: Partial<Provider>): Prom
   if (patch.phone !== undefined) updatePayload.phone = patch.phone;
   if (patch.email !== undefined) updatePayload.email = patch.email;
   if (patch.website !== undefined) updatePayload.website = patch.website;
+  if (patch.logoUrl !== undefined) {
+    updatePayload.logo_url = patch.logoUrl === "" ? null : patch.logoUrl;
+  }
   if (patch.services !== undefined) updatePayload.services = patch.services;
   if (patch.plan !== undefined) updatePayload.plan = patch.plan;
   if (patch.verified !== undefined) updatePayload.verified = patch.verified;

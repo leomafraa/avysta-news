@@ -77,7 +77,7 @@ function INCCPanel({ data }: { data: CotacoesApiResponse }) {
               : "bg-amber-50 dark:bg-amber-950/20 border-amber-200 dark:border-amber-800/30"
           }`}>
             <p className={`text-sm font-semibold mb-1 ${isHigh ? "text-red-700 dark:text-red-400" : "text-amber-700 dark:text-amber-400"}`}>
-              {isHigh ? "⚠️ Atenção: alta acima da média" : "📊 Variação em nível moderado"}
+              {isHigh ? "Atenção: alta acima da média" : "📊 Variação em nível moderado"}
             </p>
             <p className="text-xs text-gray-600 dark:text-gray-400 leading-relaxed">
               {isHigh
@@ -200,7 +200,6 @@ export function CotacoesClient() {
       {/* Error */}
       {error && (
         <div className="flex flex-col items-center justify-center py-20 gap-4 text-center">
-          <span className="text-4xl">⚠️</span>
           <p className="text-gray-600 dark:text-gray-400">{error}</p>
           <button
             onClick={() => window.location.reload()}

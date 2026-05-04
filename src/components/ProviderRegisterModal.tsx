@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import type { ProviderCategory } from "@/types/providers";
 import { BRAZIL_STATES } from "@/lib/states";
+import { OFFERED_SERVICES_OPTIONS, normalizeSelectedOfferedServices } from "@/lib/offeredServicesOptions";
 
 const CATEGORIES: { value: ProviderCategory; label: string; emoji: string }[] = [
   { value: "construtora",  label: "Construtora / Empreiteira",   emoji: "🏗️" },
@@ -60,11 +61,13 @@ interface FormData {
   email: string;
   website: string;
   description: string;
-  services: string;
+  services: string[];
 }
 
 const INPUT_CLASS =
   "w-full px-4 py-3 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-500 text-sm";
+
+const LOGO_ACCEPT = "image/png,image/jpeg,image/jpg,image/svg+xml,.png,.jpg,.jpeg,.svg";
 
 export function ProviderRegisterModal({ onClose, onSuccess, initialData }: Props) {
   const isEditMode = !!initialData;
@@ -73,6 +76,10 @@ export function ProviderRegisterModal({ onClose, onSuccess, initialData }: Props
   const [step3Error, setStep3Error] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
+  const [serviceSearch, setServiceSearch] = useState("");
+  const logoInputRef = useRef<HTMLInputElement>(null);
+  const [logoDraft, setLogoDraft] = useState<string | null>(null);
+  const [logoRemoved, setLogoRemoved] = useState(false);
 
   const [form, setForm] = useState<FormData>({
     cnpj: initialData?.cnpj ?? "",
@@ -85,11 +92,58 @@ export function ProviderRegisterModal({ onClose, onSuccess, initialData }: Props
     email: initialData?.email ?? "",
     website: initialData?.website ?? "",
     description: initialData?.description ?? "",
-    services: initialData?.services?.join(", ") ?? "",
+    services: normalizeSelectedOfferedServices(initialData?.services),
   });
 
   function set(field: keyof FormData, value: string) {
     setForm((prev) => ({ ...prev, [field]: value }));
+  }
+
+  function toggleOfferedService(label: string) {
+    setForm((prev) => ({
+      ...prev,
+      services: prev.services.includes(label)
+        ? prev.services.filter((s) => s !== label)
+        : [...prev.services, label],
+    }));
+  }
+
+  const filteredServiceOptions = useMemo(() => {
+    const q = serviceSearch.trim().toLowerCase();
+    if (!q) return [...OFFERED_SERVICES_OPTIONS];
+    return OFFERED_SERVICES_OPTIONS.filter((opt) => opt.toLowerCase().includes(q));
+  }, [serviceSearch]);
+
+  const logoPreview =
+    logoDraft ?? (!logoRemoved && initialData?.logoUrl ? initialData.logoUrl : null);
+
+  function handleLogoChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const ok = ["image/png", "image/jpeg", "image/jpg", "image/svg+xml"];
+    if (!ok.includes(file.type)) {
+      setStep3Error("Use PNG, JPEG ou SVG.");
+      return;
+    }
+    if (file.size > 2 * 1024 * 1024) {
+      setStep3Error("A imagem deve ter no máximo 2 MB.");
+      return;
+    }
+    setStep3Error("");
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (typeof reader.result === "string") {
+        setLogoDraft(reader.result);
+        setLogoRemoved(false);
+      }
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function handleClearLogo() {
+    setLogoDraft(null);
+    if (initialData?.logoUrl) setLogoRemoved(true);
+    if (logoInputRef.current) logoInputRef.current.value = "";
   }
 
   // ── Step 1: validate CNPJ format and advance
@@ -120,8 +174,22 @@ export function ProviderRegisterModal({ onClose, onSuccess, initialData }: Props
     setSubmitting(true);
     setSubmitError("");
     try {
-      const services = form.services.split(",").map((s) => s.trim()).filter(Boolean);
-      const body = { ...form, razaoSocial: form.razaoSocial || form.nomeFantasia, services };
+      const body: Record<string, unknown> = {
+        cnpj: form.cnpj,
+        nomeFantasia: form.nomeFantasia,
+        razaoSocial: form.razaoSocial || form.nomeFantasia,
+        category: form.category,
+        state: form.state,
+        city: form.city,
+        phone: form.phone,
+        email: form.email,
+        website: form.website,
+        description: form.description,
+        services: form.services,
+      };
+      if (logoDraft) body.logoBase64 = logoDraft;
+      else if (isEditMode && logoRemoved && initialData?.logoUrl) body.clearLogo = true;
+
       const res = isEditMode
         ? await fetch(`/api/fornecedores/${initialData!.id}`, {
             method: "PATCH",
@@ -197,7 +265,7 @@ export function ProviderRegisterModal({ onClose, onSuccess, initialData }: Props
                   maxLength={18}
                   className={INPUT_CLASS}
                 />
-                {cnpjError && <p className="text-xs text-red-500 mt-1.5">⚠️ {cnpjError}</p>}
+                {cnpjError && <p className="text-xs text-red-500 mt-1.5">{cnpjError}</p>}
               </div>
 
               <button
@@ -251,14 +319,50 @@ export function ProviderRegisterModal({ onClose, onSuccess, initialData }: Props
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Serviços oferecidos <span className="text-gray-400">(opcional)</span>
                 </label>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">
+                  Selecione um ou mais itens da lista.
+                  {form.services.length > 0 && (
+                    <span className="text-brand-600 dark:text-brand-400 font-medium">
+                      {" "}
+                      {form.services.length} selecionado{form.services.length !== 1 ? "s" : ""}
+                    </span>
+                  )}
+                </p>
                 <input
-                  type="text"
-                  value={form.services}
-                  onChange={(e) => set("services", e.target.value)}
-                  placeholder="Ex: Construção residencial, Reformas, Fundações"
-                  className={INPUT_CLASS}
+                  type="search"
+                  value={serviceSearch}
+                  onChange={(e) => setServiceSearch(e.target.value)}
+                  placeholder="Buscar na lista…"
+                  className={`${INPUT_CLASS} mb-2`}
+                  aria-label="Filtrar serviços oferecidos"
                 />
-                <p className="text-xs text-gray-400 mt-1">Separe por vírgula</p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-72 overflow-y-auto pr-1 border border-gray-100 dark:border-gray-800 rounded-xl p-2 bg-gray-50/50 dark:bg-gray-950/30">
+                  {filteredServiceOptions.length === 0 ? (
+                    <p className="text-xs text-gray-500 col-span-full py-4 text-center">Nenhum resultado.</p>
+                  ) : (
+                    filteredServiceOptions.map((label) => {
+                      const checked = form.services.includes(label);
+                      return (
+                        <label
+                          key={label}
+                          className={`flex items-start gap-2.5 p-2.5 rounded-lg border cursor-pointer transition-all text-left ${
+                            checked
+                              ? "border-brand-500 bg-brand-50 dark:bg-brand-900/20"
+                              : "border-gray-200 dark:border-gray-700 hover:border-brand-300 bg-white dark:bg-gray-900"
+                          }`}
+                        >
+                          <input
+                            type="checkbox"
+                            checked={checked}
+                            onChange={() => toggleOfferedService(label)}
+                            className="accent-brand-500 mt-0.5 flex-shrink-0"
+                          />
+                          <span className="text-xs text-gray-700 dark:text-gray-300 leading-snug">{label}</span>
+                        </label>
+                      );
+                    })
+                  )}
+                </div>
               </div>
 
               <div className="flex gap-3">
@@ -291,6 +395,59 @@ export function ProviderRegisterModal({ onClose, onSuccess, initialData }: Props
                   placeholder="Ex: ABC Construtora"
                   className={INPUT_CLASS}
                 />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  Logo da empresa <span className="text-gray-400">(opcional)</span>
+                </label>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">
+                  PNG, JPEG ou SVG · máx. 2 MB
+                </p>
+                <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+                  {logoPreview ? (
+                    <div className="flex items-center gap-3">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={logoPreview}
+                        alt="Pré-visualização da logo"
+                        className="w-16 h-16 rounded-xl object-cover border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800"
+                      />
+                      <div className="flex flex-col gap-2">
+                        <label className="cursor-pointer text-xs font-semibold text-brand-600 dark:text-brand-400 hover:underline">
+                          Trocar arquivo
+                          <input
+                            ref={logoInputRef}
+                            type="file"
+                            accept={LOGO_ACCEPT}
+                            className="sr-only"
+                            onChange={handleLogoChange}
+                          />
+                        </label>
+                        <button
+                          type="button"
+                          onClick={handleClearLogo}
+                          className="text-xs text-gray-500 hover:text-red-600 dark:text-gray-400 dark:hover:text-red-400 text-left"
+                        >
+                          Remover logo
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <label className="flex flex-1 cursor-pointer items-center justify-center rounded-xl border-2 border-dashed border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 px-4 py-6 hover:border-brand-400 transition-colors">
+                      <input
+                        ref={logoInputRef}
+                        type="file"
+                        accept={LOGO_ACCEPT}
+                        className="sr-only"
+                        onChange={handleLogoChange}
+                      />
+                      <span className="text-sm text-gray-500 dark:text-gray-400">
+                        Clique para enviar logo
+                      </span>
+                    </label>
+                  )}
+                </div>
               </div>
 
               {/* Estado + Cidade */}
@@ -381,7 +538,7 @@ export function ProviderRegisterModal({ onClose, onSuccess, initialData }: Props
 
               {(step3Error || submitError) && (
                 <p className="text-xs text-red-500 bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-800/30 rounded-lg px-3 py-2">
-                  ⚠️ {step3Error || submitError}
+                  {step3Error || submitError}
                 </p>
               )}
 

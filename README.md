@@ -87,12 +87,18 @@ src/
 
 ## 🗄️ Armazenamento de Dados
 
-O projeto usa arquivos JSON como banco de dados em memória/disco (sem banco externo). Os dados ficam em `src/data/`:
+O projeto usa **Supabase (PostgreSQL)** como banco de dados principal. As operações são feitas no backend, via:
 
-| Arquivo | O que armazena | Store |
+- `src/lib/supabaseServer.ts`
+- `src/lib/usersStore.ts`
+- `src/lib/providersStore.ts`
+
+### Tabelas principais
+
+| Tabela | O que armazena | Store |
 |---|---|---|
-| `src/data/users.json` | Todos os usuários — compradores e fornecedores — diferenciados pelo campo `type` | `src/lib/usersStore.ts` |
-| `src/data/providers.json` | Empresas cadastradas no diretório de fornecedores | `src/lib/providersStore.ts` |
+| `public.users` | Todos os usuários — compradores e fornecedores — diferenciados pelo campo `type` | `src/lib/usersStore.ts` |
+| `public.providers` | Empresas cadastradas no diretório de fornecedores | `src/lib/providersStore.ts` |
 
 ### Relação entre usuários e empresas
 
@@ -103,10 +109,10 @@ Compradores e fornecedores compartilham a mesma tabela de usuários. O campo `ty
 { "id": "u456", "name": "Maria Costa", "type": "fornecedor", "providerId": "p789", ... }
 ```
 
-Quando um fornecedor cadastra sua empresa, o campo `providerId` é preenchido com o ID correspondente em `providers.json`. Cada fornecedor pode ter **no máximo uma empresa** cadastrada.
+Quando um fornecedor cadastra sua empresa, o campo `providerId` em `users` é preenchido com o ID correspondente em `providers`. Cada fornecedor pode ter **no máximo uma empresa** cadastrada.
 
 ```
-users.json          providers.json
+users               providers
 ┌──────────────┐    ┌─────────────────────┐
 │ id: "u456"   │    │ id: "p789"          │
 │ type: "forn."│───▶│ userId: "u456"      │
@@ -115,8 +121,11 @@ users.json          providers.json
 └──────────────┘    └─────────────────────┘
 ```
 
-> **Nota:** Para produção, recomenda-se substituir os arquivos JSON por um banco de dados real (PostgreSQL, MongoDB, etc.).
+### Schema SQL
 
+O schema base está versionado em `supabase/schema.sql` e deve ser executado no SQL Editor do Supabase.
+
+> **Segurança:** as rotas server-side usam `SUPABASE_SERVICE_ROLE_KEY`. Nunca exponha essa chave no client.
 ## 🔌 API Interna
 
 ### `GET /api/news`
@@ -191,6 +200,9 @@ Crie um arquivo `.env.local` para desenvolvimento local:
 ```env
 NEXT_PUBLIC_BASE_URL=https://seudominio.com.br
 AUTH_SECRET=seu-segredo-jwt-aqui
+NEXT_PUBLIC_SUPABASE_URL=https://seu-projeto.supabase.co
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sb_publishable_xxx
+SUPABASE_SERVICE_ROLE_KEY=sb_secret_xxx
 ```
 
 Configure as mesmas variáveis no painel da plataforma escolhida (Vercel → Settings → Environment Variables, Railway → Variables, etc.).
@@ -260,6 +272,9 @@ jobs:
         env:
           NEXT_PUBLIC_BASE_URL: ${{ secrets.NEXT_PUBLIC_BASE_URL }}
           AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
 ```
 
 ### Configurar secrets no GitHub
@@ -270,6 +285,9 @@ Acesse **Settings → Secrets and variables → Actions** no repositório e adic
 |---|---|
 | `AUTH_SECRET` | Chave secreta para assinar os tokens JWT |
 | `NEXT_PUBLIC_BASE_URL` | URL pública da aplicação em produção |
+| `NEXT_PUBLIC_SUPABASE_URL` | URL do projeto Supabase |
+| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Chave pública (client-safe) do Supabase |
+| `SUPABASE_SERVICE_ROLE_KEY` | Chave secreta usada apenas no backend para operações de banco |
 
 ### Deploy automático via Vercel + GitHub
 

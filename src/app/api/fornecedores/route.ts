@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { readProviders, addProvider, generateId } from "@/lib/providersStore";
-import { verifyToken, toPublic } from "@/lib/auth";
-import { findUserById, updateUser } from "@/lib/usersStore";
+import { toPublic } from "@/lib/auth";
+import { uploadProviderLogoFromDataUrl, MSG_PROVIDER_SAVE_FAILED } from "@/lib/providerLogoUpload";
+import { getBearerToken, getUserFromAccessToken } from "@/lib/session";
+import { updateUser } from "@/lib/usersStore";
 import type { ProvidersApiResponse, Provider, ProviderCategory } from "@/types/providers";
 
 const PAGE_SIZE = 12;
@@ -75,21 +77,10 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     // Authenticate
-    const token = request.cookies.get("avysta_auth")?.value
-      || request.headers.get("Authorization")?.replace("Bearer ", "");
-    const payload = token ? verifyToken(token) : null;
-    if (!payload) {
-      return NextResponse.json({ error: "Não autorizado." }, { status: 401 });
-    }
-
-    const dbUser = await findUserById(payload.userId);
+    const token = getBearerToken(request);
+    const dbUser = token ? await getUserFromAccessToken(token) : null;
     if (!dbUser) {
-      return NextResponse.json({ error: "Usuário não encontrado." }, { status: 401 });
-    }
-
-    // Only fornecedor can register a company
-    if (dbUser.type !== "fornecedor") {
-      return NextResponse.json({ error: "Apenas fornecedores podem cadastrar empresas." }, { status: 403 });
+      return NextResponse.json({ error: "Não autorizado." }, { status: 401 });
     }
 
     // Prevent duplicate company per user
@@ -119,8 +110,20 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const id = generateId();
+    let logoUrl: string | undefined;
+
+    if (typeof body.logoBase64 === "string" && body.logoBase64.trim()) {
+      const up = await uploadProviderLogoFromDataUrl(id, body.logoBase64.trim());
+      if ("error" in up) {
+        const status = up.error === MSG_PROVIDER_SAVE_FAILED ? 503 : 400;
+        return NextResponse.json({ error: up.error }, { status });
+      }
+      logoUrl = up.url;
+    }
+
     const newProvider: Provider = {
-      id: generateId(),
+      id,
       userId: dbUser.id,
       cnpj: body.cnpj,
       razaoSocial: body.razaoSocial || body.nomeFantasia,
@@ -132,6 +135,7 @@ export async function POST(request: NextRequest) {
       phone: body.phone,
       email: body.email,
       website: body.website || "",
+      logoUrl,
       services: Array.isArray(body.services) ? body.services : [],
       plan: "gratuito",
       verified: false,
@@ -151,6 +155,6 @@ export async function POST(request: NextRequest) {
     );
   } catch (error) {
     console.error("[API /fornecedores] POST error:", error);
-    return NextResponse.json({ error: "Erro ao cadastrar." }, { status: 500 });
+    return NextResponse.json({ error: MSG_PROVIDER_SAVE_FAILED }, { status: 500 });
   }
 }

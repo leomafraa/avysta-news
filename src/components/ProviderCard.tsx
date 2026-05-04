@@ -41,6 +41,8 @@ const CATEGORY_EMOJI: Record<ProviderCategory, string> = {
 
 interface ProviderCardProps {
   provider: Provider;
+  /** Ao informar, o card inteiro abre o detalhe (links de contato não disparam o card). */
+  onSelect?: (provider: Provider) => void;
 }
 
 function PlanBadge({ plan }: { plan: Provider["plan"] }) {
@@ -59,11 +61,29 @@ function PlanBadge({ plan }: { plan: Provider["plan"] }) {
   return null;
 }
 
-export function ProviderCard({ provider: p }: ProviderCardProps) {
+export function ProviderCard({ provider: p, onSelect }: ProviderCardProps) {
   const initial = (p.nomeFantasia || p.razaoSocial)[0].toUpperCase();
+  const interactive = !!onSelect;
 
   return (
-    <article className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm hover:shadow-md transition-shadow duration-200 flex flex-col overflow-hidden">
+    <article
+      className={`bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm hover:shadow-md transition-shadow duration-200 flex flex-col overflow-hidden ${
+        interactive ? "cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500" : ""
+      }`}
+      role={interactive ? "button" : undefined}
+      tabIndex={interactive ? 0 : undefined}
+      onClick={interactive ? () => onSelect(p) : undefined}
+      onKeyDown={
+        interactive
+          ? (e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                onSelect(p);
+              }
+            }
+          : undefined
+      }
+    >
       {/* Top accent for premium */}
       {p.plan === "premium" && (
         <div className="h-1 bg-gradient-to-r from-amber-400 to-orange-400" />
@@ -72,14 +92,23 @@ export function ProviderCard({ provider: p }: ProviderCardProps) {
       <div className="p-5 flex flex-col flex-1">
         {/* Header */}
         <div className="flex items-start gap-3 mb-4">
-          {/* Avatar */}
-          <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-xl font-extrabold flex-shrink-0 ${
-            p.plan === "premium"
-              ? "bg-gradient-to-br from-amber-100 to-orange-100 dark:from-amber-900/30 dark:to-orange-900/30 text-orange-600 dark:text-orange-400"
-              : "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300"
-          }`}>
-            {initial}
-          </div>
+          {/* Avatar / logo */}
+          {p.logoUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={p.logoUrl}
+              alt={`Logo ${p.nomeFantasia || p.razaoSocial}`}
+              className="w-12 h-12 rounded-xl object-cover flex-shrink-0 border border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-950"
+            />
+          ) : (
+            <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-xl font-extrabold flex-shrink-0 ${
+              p.plan === "premium"
+                ? "bg-gradient-to-br from-amber-100 to-orange-100 dark:from-amber-900/30 dark:to-orange-900/30 text-orange-600 dark:text-orange-400"
+                : "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300"
+            }`}>
+              {initial}
+            </div>
+          )}
 
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between gap-2 flex-wrap">
@@ -129,6 +158,7 @@ export function ProviderCard({ provider: p }: ProviderCardProps) {
             {p.phone && (
               <a
                 href={`tel:${p.phone.replace(/\D/g, "")}`}
+                onClick={(e) => e.stopPropagation()}
                 className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400 hover:text-brand-600 dark:hover:text-brand-400 transition-colors"
                 title={p.phone}
               >
@@ -139,6 +169,7 @@ export function ProviderCard({ provider: p }: ProviderCardProps) {
             {p.email && (
               <a
                 href={`mailto:${p.email}`}
+                onClick={(e) => e.stopPropagation()}
                 className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400 hover:text-brand-600 dark:hover:text-brand-400 transition-colors"
               >
                 ✉️ <span className="hidden sm:inline truncate max-w-[120px]">{p.email}</span>
@@ -151,6 +182,7 @@ export function ProviderCard({ provider: p }: ProviderCardProps) {
               href={p.website}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
               className="text-xs text-brand-500 hover:text-brand-600 dark:hover:text-brand-400 font-medium transition-colors flex-shrink-0"
             >
               Site ↗
