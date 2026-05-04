@@ -20,24 +20,26 @@ export interface UserPublic {
   providerId?: string;
 }
 
-export interface AuthToken {
-  userId: string;
-  type: UserType;
-  exp: number;
-}
-
 export interface RegisterPayload {
   name: string;
   email: string;
   phone: string;
   type: UserType;
+  password: string;
 }
 
 export interface LoginPayload {
-  credential: string; // email or phone
+  email: string;
+  password: string;
 }
 
 export interface AuthResponse {
   user: UserPublic;
   token: string;
+  refreshToken: string;
+}
+
+export interface RegisterPendingResponse {
+  needsEmailConfirmation: true;
+  message: string;
 }

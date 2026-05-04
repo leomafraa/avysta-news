@@ -3,25 +3,31 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { ProviderCard } from "@/components/ProviderCard";
+import { ProviderDetailModal } from "@/components/ProviderDetailModal";
 import { ProviderRegisterModal } from "@/components/ProviderRegisterModal";
 import { Pagination } from "@/components/Pagination";
 import { RefreshIcon } from "@/components/Icons";
 import { BRAZIL_STATES } from "@/lib/states";
 import { useAuth } from "@/components/AuthProvider";
-import type { Provider, ProvidersApiResponse, ProviderCategory } from "@/types/providers";
+import type {
+  Provider,
+  ProvidersApiResponse,
+  ProviderCategory,
+} from "@/types/providers";
 
-const CATEGORIES: { value: ProviderCategory; label: string; emoji: string }[] = [
-  { value: "todos",        label: "Todos",         emoji: "📦" },
-  { value: "construtora",  label: "Construtoras",  emoji: "🏗️" },
-  { value: "materiais",    label: "Materiais",     emoji: "🧱" },
-  { value: "eletrica",     label: "Elétrica",      emoji: "⚡" },
-  { value: "hidraulica",   label: "Hidráulica",    emoji: "🔧" },
-  { value: "acabamento",   label: "Acabamento",    emoji: "🎨" },
-  { value: "projeto",      label: "Projetos",      emoji: "📐" },
-  { value: "equipamentos", label: "Equipamentos",  emoji: "🚜" },
-  { value: "esquadrias",   label: "Esquadrias",    emoji: "🪟" },
-  { value: "outros",       label: "Outros",        emoji: "🔩" },
-];
+const CATEGORIES: { value: ProviderCategory; label: string; emoji: string }[] =
+  [
+    { value: "todos", label: "Todos", emoji: "📦" },
+    { value: "construtora", label: "Construtoras", emoji: "🏗️" },
+    { value: "materiais", label: "Materiais", emoji: "🧱" },
+    { value: "eletrica", label: "Elétrica", emoji: "⚡" },
+    { value: "hidraulica", label: "Hidráulica", emoji: "🔧" },
+    { value: "acabamento", label: "Acabamento", emoji: "🎨" },
+    { value: "projeto", label: "Projetos", emoji: "📐" },
+    { value: "equipamentos", label: "Equipamentos", emoji: "🚜" },
+    { value: "esquadrias", label: "Esquadrias", emoji: "🪟" },
+    { value: "outros", label: "Outros", emoji: "🔩" },
+  ];
 
 export function FornecedoresClient() {
   const searchParams = useSearchParams();
@@ -31,56 +37,73 @@ export function FornecedoresClient() {
   const hasCompany = isFornecedor && !!user?.providerId;
 
   const [providers, setProviders] = useState<Provider[]>([]);
-  const [stats, setStats] = useState({ total: 0, verified: 0, states: 0, categories: 0 });
+  const [stats, setStats] = useState({
+    total: 0,
+    verified: 0,
+    states: 0,
+    categories: 0,
+  });
   const [total, setTotal] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
   const [page, setPage] = useState(1);
 
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState<ProviderCategory>(
-    (searchParams.get("category") as ProviderCategory) || "todos"
+    (searchParams.get("category") as ProviderCategory) || "todos",
   );
   const [state, setState] = useState(searchParams.get("state") || "");
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showModal, setShowModal] = useState(false);
+  const [detailProvider, setDetailProvider] = useState<Provider | null>(null);
   const [successMsg, setSuccessMsg] = useState("");
   const [myProvider, setMyProvider] = useState<Provider | null>(null);
 
-  const searchTimeout = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const searchTimeout = useRef<ReturnType<typeof setTimeout> | undefined>(
+    undefined,
+  );
 
-  const fetchProviders = useCallback(async (opts: {
-    search: string; category: ProviderCategory; state: string; page: number;
-  }) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const params = new URLSearchParams({
-        search: opts.search,
-        category: opts.category,
-        state: opts.state,
-        page: opts.page.toString(),
-      });
-      const res = await fetch(`/api/fornecedores?${params}`);
-      if (!res.ok) throw new Error("Erro ao carregar");
-      const data: ProvidersApiResponse = await res.json();
-      setProviders(data.providers);
-      setTotal(data.total);
-      setTotalPages(data.totalPages);
-      setStats(data.stats);
-    } catch {
-      setError("Não foi possível carregar o diretório.");
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  const fetchProviders = useCallback(
+    async (opts: {
+      search: string;
+      category: ProviderCategory;
+      state: string;
+      page: number;
+    }) => {
+      setLoading(true);
+      setError(null);
+      try {
+        const params = new URLSearchParams({
+          search: opts.search,
+          category: opts.category,
+          state: opts.state,
+          page: opts.page.toString(),
+        });
+        const res = await fetch(`/api/fornecedores?${params}`);
+        if (!res.ok) throw new Error("Erro ao carregar");
+        const data: ProvidersApiResponse = await res.json();
+        setProviders(data.providers);
+        setTotal(data.total);
+        setTotalPages(data.totalPages);
+        setStats(data.stats);
+      } catch {
+        setError("Não foi possível carregar o diretório.");
+      } finally {
+        setLoading(false);
+      }
+    },
+    [],
+  );
 
   // Fetch the logged-in fornecedor's own company
   useEffect(() => {
-    if (!user?.providerId) { setMyProvider(null); return; }
+    if (!user?.providerId) {
+      setMyProvider(null);
+      return;
+    }
     fetch(`/api/fornecedores/${user.providerId}`)
-      .then((r) => r.ok ? r.json() : null)
+      .then((r) => (r.ok ? r.json() : null))
       .then((data) => setMyProvider(data ?? null))
       .catch(() => setMyProvider(null));
   }, [user?.providerId]);
@@ -105,7 +128,11 @@ export function FornecedoresClient() {
     setCategory(cat);
     setPage(1);
     const p = new URLSearchParams(searchParams.toString());
-    if (cat === "todos") { p.delete("category"); } else { p.set("category", cat); }
+    if (cat === "todos") {
+      p.delete("category");
+    } else {
+      p.set("category", cat);
+    }
     router.push(`/fornecedores?${p}`, { scroll: false });
   }
 
@@ -113,15 +140,20 @@ export function FornecedoresClient() {
     setState(s);
     setPage(1);
     const p = new URLSearchParams(searchParams.toString());
-    if (s) { p.set("state", s); } else { p.delete("state"); }
+    if (s) {
+      p.set("state", s);
+    } else {
+      p.delete("state");
+    }
     router.push(`/fornecedores?${p}`, { scroll: false });
   }
 
   async function handleSuccess(isEdit: boolean) {
     setShowModal(false);
-    setSuccessMsg(isEdit
-      ? "Empresa atualizada com sucesso!"
-      : "Empresa cadastrada com sucesso! Ela aparecerá no diretório em breve."
+    setSuccessMsg(
+      isEdit
+        ? "Empresa atualizada com sucesso!"
+        : "Empresa cadastrada com sucesso! Ela aparecerá no diretório em breve.",
     );
     if (!isEdit) await refreshUser();
     fetchProviders({ search, category, state, page: 1 });
@@ -130,18 +162,16 @@ export function FornecedoresClient() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-
       {/* Hero */}
       <section className="mb-8">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
           <div>
             <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-900 dark:text-white tracking-tight leading-tight">
-              Diretório de{" "}
-              <span className="text-brand-500">Fornecedores</span>
+              Diretório de <span className="text-brand-500">Fornecedores</span>
             </h1>
             <p className="mt-2 text-base sm:text-lg text-gray-500 dark:text-gray-400 max-w-2xl">
-              Encontre construtoras, fornecedores de materiais e prestadores de serviços
-              verificados em todo o Brasil.
+              Encontre construtoras, fornecedores de materiais e prestadores de
+              serviços verificados em todo o Brasil.
             </p>
           </div>
           {isFornecedor && (
@@ -149,7 +179,9 @@ export function FornecedoresClient() {
               onClick={() => setShowModal(true)}
               className="flex-shrink-0 flex items-center gap-2 px-5 py-3 bg-brand-500 hover:bg-brand-600 active:bg-brand-700 text-white font-semibold rounded-xl transition-colors shadow-md shadow-brand-500/25 text-sm"
             >
-              {hasCompany ? "✏️ Editar minha empresa" : "+ Cadastrar minha empresa"}
+              {hasCompany
+                ? "✏️ Editar minha empresa"
+                : "+ Cadastrar minha empresa"}
             </button>
           )}
         </div>
@@ -160,9 +192,13 @@ export function FornecedoresClient() {
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
           {[
             { label: "Empresas cadastradas", value: stats.total, emoji: "🏢" },
-            { label: "Empresas verificadas",  value: stats.verified, emoji: "✓" },
-            { label: "Estados atendidos",     value: stats.states, emoji: "📍" },
-            { label: "Categorias",            value: stats.categories, emoji: "📦" },
+            {
+              label: "Empresas verificadas",
+              value: stats.verified,
+              emoji: "✓",
+            },
+            { label: "Estados atendidos", value: stats.states, emoji: "📍" },
+            { label: "Categorias", value: stats.categories, emoji: "📦" },
           ].map(({ label, value, emoji }) => (
             <div
               key={label}
@@ -171,7 +207,9 @@ export function FornecedoresClient() {
               <p className="text-2xl font-extrabold text-gray-900 dark:text-white">
                 {emoji} {value}
               </p>
-              <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">{label}</p>
+              <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">
+                {label}
+              </p>
             </div>
           ))}
         </div>
@@ -189,8 +227,18 @@ export function FornecedoresClient() {
         {/* Search + State */}
         <div className="flex flex-col sm:flex-row gap-3">
           <div className="relative flex-1">
-            <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+            <svg
+              className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+              />
             </svg>
             <input
               type="text"
@@ -216,8 +264,18 @@ export function FornecedoresClient() {
               ))}
             </select>
             <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center">
-              <svg className="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" d="m19 9-7 7-7-7" />
+              <svg
+                className="w-4 h-4 text-gray-400"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={2}
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="m19 9-7 7-7-7"
+                />
               </svg>
             </div>
           </div>
@@ -279,7 +337,10 @@ export function FornecedoresClient() {
       {loading && (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 animate-pulse">
           {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="h-72 bg-gray-200 dark:bg-gray-800 rounded-2xl" />
+            <div
+              key={i}
+              className="h-72 bg-gray-200 dark:bg-gray-800 rounded-2xl"
+            />
           ))}
         </div>
       )}
@@ -310,7 +371,11 @@ export function FornecedoresClient() {
         <>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 animate-fade-in">
             {providers.map((p) => (
-              <ProviderCard key={p.id} provider={p} />
+              <ProviderCard
+                key={p.id}
+                provider={p}
+                onSelect={(prov) => setDetailProvider(prov)}
+              />
             ))}
           </div>
 
@@ -336,8 +401,8 @@ export function FornecedoresClient() {
             Sua empresa ainda não está aqui?
           </h2>
           <p className="text-gray-500 dark:text-gray-400 text-sm mb-6 max-w-md mx-auto">
-            Cadastro gratuito com validação automática via CNPJ. Apareça para compradores
-            e contratantes de todo o Brasil.
+            Cadastro gratuito com validação automática via CNPJ. Apareça para
+            compradores e contratantes de todo o Brasil.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <button
@@ -353,6 +418,13 @@ export function FornecedoresClient() {
             </div>
           </div>
         </div>
+      )}
+
+      {detailProvider && (
+        <ProviderDetailModal
+          provider={detailProvider}
+          onClose={() => setDetailProvider(null)}
+        />
       )}
 
       {/* Modal */}

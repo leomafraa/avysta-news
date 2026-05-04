@@ -30,9 +30,10 @@ export default function LandingPage() {
 
   const [step, setStep] = useState<1 | 2>(1);
   const [type, setType] = useState<UserType | "">("");
-  const [form, setForm] = useState({ name: "", email: "", phone: "" });
+  const [form, setForm] = useState({ name: "", email: "", phone: "", password: "", confirmPassword: "" });
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
   const [acceptedTerms, setAcceptedTerms] = useState(false);
 
   useEffect(() => {
@@ -45,22 +46,39 @@ export default function LandingPage() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    const { name, email, phone } = form;
+    const { name, email, phone, password, confirmPassword } = form;
     if (!name.trim()) { setError("Informe seu nome."); return; }
     if (!email.trim()) { setError("Informe seu e-mail."); return; }
     if (!phone.trim()) { setError("Informe seu telefone."); return; }
+    if (!password || password.length < 8) { setError("A senha deve ter pelo menos 8 caracteres."); return; }
+    if (password !== confirmPassword) { setError("As senhas não coincidem."); return; }
     if (!acceptedTerms) { setError("Você precisa aceitar os Termos e Condições para continuar."); return; }
     setSubmitting(true);
     setError("");
+    setSuccessMessage("");
     try {
       const res = await fetch("/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: name.trim(), email: email.trim(), phone: phone.trim(), type }),
+        body: JSON.stringify({
+          name: name.trim(),
+          email: email.trim(),
+          phone: phone.trim(),
+          type,
+          password,
+        }),
       });
       const data = await res.json();
       if (!res.ok) { setError(data.error || "Erro ao cadastrar."); return; }
-      login(data.token, data.user);
+      if (data.needsEmailConfirmation) {
+        setSuccessMessage(data.message || "Verifique seu e-mail para ativar a conta.");
+        setStep(1);
+        setForm({ name: "", email: "", phone: "", password: "", confirmPassword: "" });
+        setType("");
+        setAcceptedTerms(false);
+        return;
+      }
+      login(data.token, data.refreshToken, data.user);
       router.push("/noticias");
     } catch {
       setError("Erro de conexão. Tente novamente.");
@@ -123,6 +141,14 @@ export default function LandingPage() {
             <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
               {step === 1 ? "Como você usa a plataforma?" : "Informe seus dados"}
             </p>
+            {successMessage && (
+              <p className="mt-3 text-sm text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800/40 rounded-xl px-4 py-3">
+                {successMessage}{" "}
+                <Link href="/login" className="font-semibold underline underline-offset-2">
+                  Ir para o login
+                </Link>
+              </p>
+            )}
           </div>
 
           {/* Progress */}
@@ -160,7 +186,7 @@ export default function LandingPage() {
                 </button>
               ))}
 
-              {error && <p className="text-xs text-red-500">⚠️ {error}</p>}
+              {error && <p className="text-xs text-red-500">{error}</p>}
 
               <button
                 onClick={() => { if (!type) { setError("Selecione o tipo de conta."); return; } setError(""); setStep(2); }}
@@ -220,6 +246,30 @@ export default function LandingPage() {
                 />
               </div>
 
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Senha *</label>
+                <input
+                  type="password"
+                  value={form.password}
+                  onChange={(e) => set("password", e.target.value)}
+                  placeholder="Mínimo 8 caracteres"
+                  autoComplete="new-password"
+                  className="w-full px-4 py-2.5 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-500 text-sm"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Confirmar senha *</label>
+                <input
+                  type="password"
+                  value={form.confirmPassword}
+                  onChange={(e) => set("confirmPassword", e.target.value)}
+                  placeholder="Repita a senha"
+                  autoComplete="new-password"
+                  className="w-full px-4 py-2.5 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-500 text-sm"
+                />
+              </div>
+
               <label className="flex items-start gap-3 cursor-pointer group">
                 <div className="relative flex-shrink-0 mt-0.5">
                   <input
@@ -246,7 +296,7 @@ export default function LandingPage() {
               </label>
 
               {error && (
-                <p className="text-xs text-red-500 bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-800/30 rounded-lg px-3 py-2">⚠️ {error}</p>
+                <p className="text-xs text-red-500 bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-800/30 rounded-lg px-3 py-2">{error}</p>
               )}
 
               <button type="submit" disabled={submitting || !acceptedTerms} className="w-full py-3 bg-brand-500 hover:bg-brand-600 disabled:opacity-60 text-white font-bold rounded-xl transition-colors text-sm">

@@ -48,9 +48,11 @@ export function Header() {
     <header className="sticky top-0 z-50 bg-white/90 dark:bg-gray-900/90 backdrop-blur-md border-b border-gray-200 dark:border-gray-800 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 gap-4">
-
           {/* Logo */}
-          <Link href="/noticias" className="flex items-center gap-2 group flex-shrink-0">
+          <Link
+            href="/noticias"
+            className="flex items-center gap-2 group flex-shrink-0"
+          >
             <div className="w-8 h-8 bg-gradient-to-br from-brand-500 to-brand-700 rounded-lg flex items-center justify-center shadow-md group-hover:scale-105 transition-transform">
               <span className="text-white font-bold text-sm">A</span>
             </div>
@@ -63,7 +65,8 @@ export function Header() {
           {/* Nav */}
           <nav className="hidden sm:flex items-center gap-1">
             {navLinks.map(({ href, label }) => {
-              const active = pathname === href || pathname.startsWith(href + "/");
+              const active =
+                pathname === href || pathname.startsWith(href + "/");
               return (
                 <Link
                   key={href}
@@ -88,12 +91,16 @@ export function Header() {
               aria-label="Alternar tema"
               className="p-2 rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
             >
-              {theme === "dark" ? <SunIcon className="w-5 h-5" /> : <MoonIcon className="w-5 h-5" />}
+              {theme === "dark" ? (
+                <SunIcon className="w-5 h-5" />
+              ) : (
+                <MoonIcon className="w-5 h-5" />
+              )}
             </button>
 
             {/* Auth area */}
-            {!loading && (
-              user ? (
+            {!loading &&
+              (user ? (
                 /* User avatar + dropdown */
                 <div className="relative" ref={menuRef}>
                   <button
@@ -111,8 +118,18 @@ export function Header() {
                         {TYPE_EMOJI[user.type]} {TYPE_LABEL[user.type]}
                       </p>
                     </div>
-                    <svg className={`w-3.5 h-3.5 text-gray-400 transition-transform ${menuOpen ? "rotate-180" : ""}`} fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="m19 9-7 7-7-7" />
+                    <svg
+                      className={`w-3.5 h-3.5 text-gray-400 transition-transform ${menuOpen ? "rotate-180" : ""}`}
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={2}
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="m19 9-7 7-7-7"
+                      />
                     </svg>
                   </button>
 
@@ -120,8 +137,12 @@ export function Header() {
                   {menuOpen && (
                     <div className="absolute right-0 mt-2 w-52 bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-800 shadow-lg py-1 z-50">
                       <div className="px-4 py-3 border-b border-gray-100 dark:border-gray-800">
-                        <p className="text-sm font-bold text-gray-900 dark:text-white truncate">{user.name}</p>
-                        <p className="text-xs text-gray-400 dark:text-gray-500 truncate">{user.email}</p>
+                        <p className="text-sm font-bold text-gray-900 dark:text-white truncate">
+                          {user.name}
+                        </p>
+                        <p className="text-xs text-gray-400 dark:text-gray-500 truncate">
+                          {user.email}
+                        </p>
                       </div>
 
                       {user.type === "fornecedor" && (
@@ -159,10 +180,8 @@ export function Header() {
                     Cadastrar
                   </Link>
                 </div>
-              )
-            )}
+              ))}
           </div>
-
         </div>
       </div>
     </header>

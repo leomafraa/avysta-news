@@ -177,7 +177,6 @@ export function NewsGrid() {
       {/* Error state */}
       {error && (
         <div className="flex flex-col items-center justify-center py-16 gap-4 text-center">
-          <span className="text-4xl">⚠️</span>
           <p className="text-gray-600 dark:text-gray-400 max-w-sm">{error}</p>
           <button
             onClick={() => fetchNews({ search, category, state, page })}

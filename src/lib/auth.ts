@@ -1,35 +1,4 @@
-import crypto from "crypto";
-import type { AuthToken, UserPublic } from "@/types/user";
-
-const SECRET = process.env.AUTH_SECRET || "avysta-community-secret-2025";
-const TOKEN_TTL = 30 * 24 * 60 * 60 * 1000; // 30 days in ms
-
-// ── Token creation / verification ────────────────────
-export function createToken(payload: Omit<AuthToken, "exp">): string {
-  const data: AuthToken = { ...payload, exp: Date.now() + TOKEN_TTL };
-  const json = Buffer.from(JSON.stringify(data)).toString("base64url");
-  const sig = crypto.createHmac("sha256", SECRET).update(json).digest("base64url");
-  return `${json}.${sig}`;
-}
-
-export function verifyToken(token: string): AuthToken | null {
-  try {
-    const [json, sig] = token.split(".");
-    if (!json || !sig) return null;
-    const expected = crypto.createHmac("sha256", SECRET).update(json).digest("base64url");
-    if (expected !== sig) return null;
-    const data = JSON.parse(Buffer.from(json, "base64url").toString()) as AuthToken;
-    if (data.exp < Date.now()) return null;
-    return data;
-  } catch {
-    return null;
-  }
-}
-
-// ── Helpers ───────────────────────────────────────────
-export function generateUserId(): string {
-  return `u${Date.now().toString(36)}${crypto.randomBytes(3).toString("hex")}`;
-}
+import type { UserPublic } from "@/types/user";
 
 type User = {
   id: string;
@@ -59,4 +28,8 @@ export function isValidEmail(email: string): boolean {
 
 export function isValidPhone(phone: string): boolean {
   return phone.replace(/\D/g, "").length >= 10;
+}
+
+export function isValidPassword(password: string): boolean {
+  return typeof password === "string" && password.length >= 8;
 }

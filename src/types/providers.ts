@@ -25,6 +25,8 @@ export interface Provider {
   phone: string;
   email: string;
   website: string;
+  /** URL pública da logo (ex.: Supabase Storage) */
+  logoUrl?: string;
   services: string[];
   plan: ProviderPlan;
   verified: boolean;
