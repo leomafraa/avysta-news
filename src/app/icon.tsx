@@ -11,23 +11,37 @@ export default function Icon() {
           width: 32,
           height: 32,
           borderRadius: 8,
-          background: "linear-gradient(135deg, #f97316 0%, #ea580c 100%)",
+          backgroundColor: "#020617",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
+          position: "relative",
         }}
       >
-        <span
+        <div
           style={{
-            color: "white",
-            fontSize: 18,
-            fontWeight: 800,
-            fontFamily: "sans-serif",
-            lineHeight: 1,
+            position: "absolute",
+            top: 4,
+            width: 8,
+            height: 8,
+            borderRadius: "9999px",
+            backgroundColor: "#f97316",
           }}
-        >
-          A
-        </span>
+        />
+        <div
+          style={{
+            position: "absolute",
+            bottom: 5,
+            width: 18,
+            height: 18,
+            borderLeft: "3px solid #ffffff",
+            borderRight: "3px solid #ffffff",
+            borderBottom: "3px solid transparent",
+            borderTop: "3px solid transparent",
+            transform: "skewX(0deg)",
+            borderRadius: 2,
+          }}
+        />
       </div>
     ),
     { ...size }

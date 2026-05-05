@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { NewspaperIcon } from "./Icons";
 
 export function Footer() {
@@ -9,8 +10,14 @@ export function Footer() {
           {/* Brand */}
           <div className="space-y-3">
             <Link href="/noticias" className="flex items-center gap-2">
-              <div className="w-7 h-7 bg-gradient-to-br from-brand-500 to-brand-700 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-xs">A</span>
+              <div className="w-8 h-8 rounded-xl overflow-hidden bg-[#020617]">
+                <Image
+                  src="/brand/avysta-logo.png"
+                  alt="Logo Avysta"
+                  width={32}
+                  height={32}
+                  className="w-full h-full object-contain"
+                />
               </div>
               <span className="font-bold text-lg text-gray-900 dark:text-white">
                 avysta<span className="text-brand-500 font-light">community</span>

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/components/AuthProvider";
 import type { UserType } from "@/types/user";
@@ -96,8 +97,15 @@ export default function LandingPage() {
       <div className="lg:w-1/2 bg-gradient-to-br from-brand-600 via-brand-700 to-brand-900 flex flex-col justify-between p-8 sm:p-12 lg:p-16 text-white">
         <div>
           <div className="flex items-center gap-3 mb-12">
-            <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
-              <span className="text-white font-bold text-lg">A</span>
+            <div className="w-10 h-10 rounded-xl overflow-hidden bg-[#020617]">
+              <Image
+                src="/brand/avysta-logo.png"
+                alt="Logo Avysta"
+                width={40}
+                height={40}
+                priority
+                className="w-full h-full object-contain"
+              />
             </div>
             <span className="font-bold text-2xl tracking-tight">
               avysta<span className="font-light opacity-80">community</span>
