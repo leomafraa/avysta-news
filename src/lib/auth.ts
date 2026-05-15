@@ -6,6 +6,7 @@ type User = {
   email: string;
   phone: string;
   type: "comprador" | "fornecedor";
+  empresaNomeFantasia?: string;
   createdAt: string;
   providerId?: string;
 };
@@ -17,6 +18,7 @@ export function toPublic(user: User): UserPublic {
     email: user.email,
     phone: user.phone,
     type: user.type,
+    empresaNomeFantasia: user.empresaNomeFantasia,
     createdAt: user.createdAt,
     providerId: user.providerId,
   };

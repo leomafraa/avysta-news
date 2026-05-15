@@ -6,6 +6,8 @@ export interface User {
   email: string;
   phone: string;
   type: UserType;
+  /** Nome fantasia da empresa (compradores) */
+  empresaNomeFantasia?: string;
   createdAt: string;
   providerId?: string;
 }
@@ -16,6 +18,7 @@ export interface UserPublic {
   email: string;
   phone: string;
   type: UserType;
+  empresaNomeFantasia?: string;
   createdAt: string;
   providerId?: string;
 }
@@ -26,6 +29,8 @@ export interface RegisterPayload {
   phone: string;
   type: UserType;
   password: string;
+  /** Obrigatório quando type === comprador */
+  empresaNomeFantasia?: string;
 }
 
 export interface LoginPayload {

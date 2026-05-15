@@ -31,7 +31,14 @@ export default function LandingPage() {
 
   const [step, setStep] = useState<1 | 2>(1);
   const [type, setType] = useState<UserType | "">("");
-  const [form, setForm] = useState({ name: "", email: "", phone: "", password: "", confirmPassword: "" });
+  const [form, setForm] = useState({
+    name: "",
+    empresaNomeFantasia: "",
+    email: "",
+    phone: "",
+    password: "",
+    confirmPassword: "",
+  });
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
@@ -47,8 +54,12 @@ export default function LandingPage() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    const { name, email, phone, password, confirmPassword } = form;
+    const { name, empresaNomeFantasia, email, phone, password, confirmPassword } = form;
     if (!name.trim()) { setError("Informe seu nome."); return; }
+    if (type === "comprador" && !empresaNomeFantasia.trim()) {
+      setError("Informe o nome fantasia da empresa.");
+      return;
+    }
     if (!email.trim()) { setError("Informe seu e-mail."); return; }
     if (!phone.trim()) { setError("Informe seu telefone."); return; }
     if (!password || password.length < 8) { setError("A senha deve ter pelo menos 8 caracteres."); return; }
@@ -67,6 +78,9 @@ export default function LandingPage() {
           phone: phone.trim(),
           type,
           password,
+          ...(type === "comprador" && {
+            empresaNomeFantasia: empresaNomeFantasia.trim(),
+          }),
         }),
       });
       const data = await res.json();
@@ -74,7 +88,14 @@ export default function LandingPage() {
       if (data.needsEmailConfirmation) {
         setSuccessMessage(data.message || "Verifique seu e-mail para ativar a conta.");
         setStep(1);
-        setForm({ name: "", email: "", phone: "", password: "", confirmPassword: "" });
+        setForm({
+          name: "",
+          empresaNomeFantasia: "",
+          email: "",
+          phone: "",
+          password: "",
+          confirmPassword: "",
+        });
         setType("");
         setAcceptedTerms(false);
         return;
@@ -229,6 +250,21 @@ export default function LandingPage() {
                   className="w-full px-4 py-2.5 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-500 text-sm"
                 />
               </div>
+
+              {type === "comprador" && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    Empresa (Nome Fantasia) *
+                  </label>
+                  <input
+                    type="text"
+                    value={form.empresaNomeFantasia}
+                    onChange={(e) => set("empresaNomeFantasia", e.target.value)}
+                    placeholder="Ex: Construtora Silva"
+                    className="w-full px-4 py-2.5 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-500 text-sm"
+                  />
+                </div>
+              )}
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">E-mail *</label>

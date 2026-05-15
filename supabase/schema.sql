@@ -7,6 +7,7 @@ create table if not exists public.users (
   phone text not null,
   phone_normalized text not null unique,
   type text not null check (type in ('comprador', 'fornecedor')),
+  empresa_nome_fantasia text null,
   created_at timestamptz not null default now(),
   provider_id text null
 );
