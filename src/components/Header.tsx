@@ -40,7 +40,7 @@ export function Header() {
   function handleLogout() {
     logout();
     setMenuOpen(false);
-    router.push("/noticias");
+    router.replace("/");
   }
 
   const initial = user?.name?.charAt(0).toUpperCase() ?? "";
