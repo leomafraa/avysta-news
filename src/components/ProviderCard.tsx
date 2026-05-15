@@ -15,14 +15,22 @@ const CATEGORY_LABEL: Record<ProviderCategory, string> = {
 
 const CATEGORY_COLOR: Record<ProviderCategory, string> = {
   todos: "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-300",
-  construtora: "bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400",
-  materiais: "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400",
-  eletrica: "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400",
-  hidraulica: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400",
-  acabamento: "bg-pink-100 text-pink-700 dark:bg-pink-900/30 dark:text-pink-400",
-  projeto: "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400",
-  equipamentos: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
-  esquadrias: "bg-cyan-100 text-cyan-700 dark:bg-cyan-900/30 dark:text-cyan-400",
+  construtora:
+    "bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400",
+  materiais:
+    "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400",
+  eletrica:
+    "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400",
+  hidraulica:
+    "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400",
+  acabamento:
+    "bg-pink-100 text-pink-700 dark:bg-pink-900/30 dark:text-pink-400",
+  projeto:
+    "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400",
+  equipamentos:
+    "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
+  esquadrias:
+    "bg-cyan-100 text-cyan-700 dark:bg-cyan-900/30 dark:text-cyan-400",
   outros: "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-300",
 };
 
@@ -68,7 +76,9 @@ export function ProviderCard({ provider: p, onSelect }: ProviderCardProps) {
   return (
     <article
       className={`bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm hover:shadow-md transition-shadow duration-200 flex flex-col overflow-hidden ${
-        interactive ? "cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500" : ""
+        interactive
+          ? "cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
+          : ""
       }`}
       role={interactive ? "button" : undefined}
       tabIndex={interactive ? 0 : undefined}
@@ -98,14 +108,16 @@ export function ProviderCard({ provider: p, onSelect }: ProviderCardProps) {
             <img
               src={p.logoUrl}
               alt={`Logo ${p.nomeFantasia || p.razaoSocial}`}
-              className="w-12 h-12 rounded-xl object-cover flex-shrink-0 border border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-950"
+              className="aspect-square w-12 rounded-xl flex-shrink-0 border border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-950"
             />
           ) : (
-            <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-xl font-extrabold flex-shrink-0 ${
-              p.plan === "premium"
-                ? "bg-gradient-to-br from-amber-100 to-orange-100 dark:from-amber-900/30 dark:to-orange-900/30 text-orange-600 dark:text-orange-400"
-                : "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300"
-            }`}>
+            <div
+              className={`w-12 h-12 rounded-xl flex items-center justify-center text-xl font-extrabold flex-shrink-0 ${
+                p.plan === "premium"
+                  ? "bg-gradient-to-br from-amber-100 to-orange-100 dark:from-amber-900/30 dark:to-orange-900/30 text-orange-600 dark:text-orange-400"
+                  : "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300"
+              }`}
+            >
               {initial}
             </div>
           )}
@@ -118,7 +130,9 @@ export function ProviderCard({ provider: p, onSelect }: ProviderCardProps) {
               <PlanBadge plan={p.plan} />
             </div>
             <div className="flex items-center gap-2 mt-1 flex-wrap">
-              <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${CATEGORY_COLOR[p.category]}`}>
+              <span
+                className={`text-xs font-semibold px-2 py-0.5 rounded-full ${CATEGORY_COLOR[p.category]}`}
+              >
                 {CATEGORY_EMOJI[p.category]} {CATEGORY_LABEL[p.category]}
               </span>
               <span className="text-xs text-gray-400 dark:text-gray-500">
@@ -172,7 +186,10 @@ export function ProviderCard({ provider: p, onSelect }: ProviderCardProps) {
                 onClick={(e) => e.stopPropagation()}
                 className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400 hover:text-brand-600 dark:hover:text-brand-400 transition-colors"
               >
-                ✉️ <span className="hidden sm:inline truncate max-w-[120px]">{p.email}</span>
+                ✉️{" "}
+                <span className="hidden sm:inline truncate max-w-[120px]">
+                  {p.email}
+                </span>
                 <span className="sm:hidden">Email</span>
               </a>
             )}

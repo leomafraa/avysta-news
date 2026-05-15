@@ -77,7 +77,9 @@ export function ProviderDetailModal({ provider: p, onClose }: Props) {
   const displayName = p.nomeFantasia || p.razaoSocial;
   const initial = displayName.charAt(0).toUpperCase();
   const created = p.createdAt
-    ? new Intl.DateTimeFormat("pt-BR", { dateStyle: "long" }).format(new Date(p.createdAt))
+    ? new Intl.DateTimeFormat("pt-BR", { dateStyle: "long" }).format(
+        new Date(p.createdAt),
+      )
     : null;
 
   useEffect(() => {
@@ -101,7 +103,10 @@ export function ProviderDetailModal({ provider: p, onClose }: Props) {
         onClick={(e) => e.stopPropagation()}
       >
         <div className="sticky top-0 z-10 flex items-center justify-between gap-3 p-5 border-b border-gray-100 dark:border-gray-800 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm">
-          <h2 id="provider-detail-title" className="text-lg font-bold text-gray-900 dark:text-white truncate pr-2">
+          <h2
+            id="provider-detail-title"
+            className="text-lg font-bold text-gray-900 dark:text-white truncate pr-2"
+          >
             {displayName}
           </h2>
           <button
@@ -121,7 +126,7 @@ export function ProviderDetailModal({ provider: p, onClose }: Props) {
               <img
                 src={p.logoUrl}
                 alt=""
-                className="w-20 h-20 rounded-2xl object-cover border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-950 flex-shrink-0"
+                className="aspect-square w-20 rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-950 flex-shrink-0"
               />
             ) : (
               <div className="w-20 h-20 rounded-2xl flex items-center justify-center text-2xl font-extrabold bg-gradient-to-br from-brand-100 to-brand-200 dark:from-brand-900/40 dark:to-brand-800/30 text-brand-700 dark:text-brand-300 flex-shrink-0">
@@ -146,19 +151,25 @@ export function ProviderDetailModal({ provider: p, onClose }: Props) {
               <dt className="text-xs font-semibold uppercase tracking-wide text-gray-400 dark:text-gray-500 mb-1">
                 Razão social
               </dt>
-              <dd className="text-gray-900 dark:text-white">{p.razaoSocial || "—"}</dd>
+              <dd className="text-gray-900 dark:text-white">
+                {p.razaoSocial || "—"}
+              </dd>
             </div>
             <div>
               <dt className="text-xs font-semibold uppercase tracking-wide text-gray-400 dark:text-gray-500 mb-1">
                 Nome fantasia
               </dt>
-              <dd className="text-gray-900 dark:text-white">{p.nomeFantasia || "—"}</dd>
+              <dd className="text-gray-900 dark:text-white">
+                {p.nomeFantasia || "—"}
+              </dd>
             </div>
             <div>
               <dt className="text-xs font-semibold uppercase tracking-wide text-gray-400 dark:text-gray-500 mb-1">
                 CNPJ
               </dt>
-              <dd className="text-gray-900 dark:text-white font-mono">{maskCnpj(p.cnpj)}</dd>
+              <dd className="text-gray-900 dark:text-white font-mono">
+                {maskCnpj(p.cnpj)}
+              </dd>
             </div>
             {(p.cnae || p.cnaeDescricao) && (
               <div>
@@ -214,7 +225,9 @@ export function ProviderDetailModal({ provider: p, onClose }: Props) {
                   >
                     {p.phone}
                   </a>
-                  <span className="text-gray-400 dark:text-gray-500 text-xs ml-2">Telefone</span>
+                  <span className="text-gray-400 dark:text-gray-500 text-xs ml-2">
+                    Telefone
+                  </span>
                 </li>
               )}
               {p.email && (
@@ -237,7 +250,9 @@ export function ProviderDetailModal({ provider: p, onClose }: Props) {
                   >
                     {p.website.trim()}
                   </a>
-                  <span className="text-gray-400 dark:text-gray-500 text-xs ml-2">Site</span>
+                  <span className="text-gray-400 dark:text-gray-500 text-xs ml-2">
+                    Site
+                  </span>
                 </li>
               )}
             </ul>
