@@ -8,6 +8,7 @@ type UserRow = {
   phone: string;
   phone_normalized: string;
   type: User["type"];
+  empresa_nome_fantasia: string | null;
   created_at: string;
   provider_id: string | null;
 };
@@ -23,6 +24,7 @@ function rowToUser(row: UserRow): User {
     email: row.email,
     phone: row.phone,
     type: row.type,
+    empresaNomeFantasia: row.empresa_nome_fantasia ?? undefined,
     createdAt: row.created_at,
     providerId: row.provider_id ?? undefined,
   };
@@ -48,6 +50,7 @@ export async function writeUsers(users: User[]): Promise<void> {
     phone: u.phone,
     phone_normalized: normalizePhone(u.phone),
     type: u.type,
+    empresa_nome_fantasia: u.empresaNomeFantasia?.trim() || null,
     created_at: u.createdAt,
     provider_id: u.providerId ?? null,
   }));
@@ -113,6 +116,7 @@ export async function createUser(user: User): Promise<void> {
       phone: user.phone,
       phone_normalized: normalizePhone(user.phone),
       type: user.type,
+      empresa_nome_fantasia: user.empresaNomeFantasia?.trim() || null,
       created_at: user.createdAt,
       provider_id: user.providerId ?? null,
     });
@@ -132,6 +136,9 @@ export async function updateUser(id: string, patch: Partial<User>): Promise<User
     updatePayload.phone_normalized = normalizePhone(patch.phone);
   }
   if (patch.type !== undefined) updatePayload.type = patch.type;
+  if (patch.empresaNomeFantasia !== undefined) {
+    updatePayload.empresa_nome_fantasia = patch.empresaNomeFantasia.trim() || null;
+  }
   if (patch.createdAt !== undefined) updatePayload.created_at = patch.createdAt;
   if (patch.providerId !== undefined) updatePayload.provider_id = patch.providerId;
 

@@ -8,9 +8,15 @@ import type { RegisterPayload, AuthResponse, RegisterPendingResponse } from "@/t
 export async function POST(request: NextRequest) {
   try {
     const body: RegisterPayload = await request.json();
-    const { name, email, phone, type, password } = body;
+    const { name, email, phone, type, password, empresaNomeFantasia } = body;
 
     if (!name?.trim()) return NextResponse.json({ error: "Nome é obrigatório." }, { status: 400 });
+    if (type === "comprador" && !empresaNomeFantasia?.trim()) {
+      return NextResponse.json(
+        { error: "Informe o nome fantasia da empresa." },
+        { status: 400 }
+      );
+    }
     if (!email?.trim() || !isValidEmail(email)) return NextResponse.json({ error: "E-mail inválido." }, { status: 400 });
     if (!phone?.trim() || !isValidPhone(phone)) return NextResponse.json({ error: "Telefone inválido." }, { status: 400 });
     if (type !== "comprador" && type !== "fornecedor") return NextResponse.json({ error: "Tipo inválido." }, { status: 400 });
@@ -38,6 +44,8 @@ export async function POST(request: NextRequest) {
           name: name.trim(),
           phone: phone.trim(),
           type,
+          empresa_nome_fantasia:
+            type === "comprador" ? empresaNomeFantasia!.trim() : null,
         },
       },
     });
@@ -60,6 +68,8 @@ export async function POST(request: NextRequest) {
       email: email.toLowerCase().trim(),
       phone: phone.trim(),
       type,
+      empresaNomeFantasia:
+        type === "comprador" ? empresaNomeFantasia!.trim() : undefined,
       createdAt: new Date().toISOString(),
     };
 
