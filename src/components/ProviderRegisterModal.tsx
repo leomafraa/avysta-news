@@ -4,6 +4,7 @@ import { useMemo, useRef, useState } from "react";
 import type { ProviderCategory } from "@/types/providers";
 import { BRAZIL_STATES } from "@/lib/states";
 import { OFFERED_SERVICES_OPTIONS, normalizeSelectedOfferedServices } from "@/lib/offeredServicesOptions";
+import { getCnpjValidationError, isValidCnpj } from "@/lib/cnpj";
 
 const CATEGORIES: { value: ProviderCategory; label: string; emoji: string }[] = [
   { value: "construtora",  label: "Construtora / Empreiteira",   emoji: "🏗️" },
@@ -148,9 +149,9 @@ export function ProviderRegisterModal({ onClose, onSuccess, initialData }: Props
 
   // ── Step 1: validate CNPJ format and advance
   function advanceFromStep1() {
-    const clean = form.cnpj.replace(/\D/g, "");
-    if (clean.length !== 14) {
-      setCnpjError("CNPJ deve ter 14 dígitos.");
+    const error = getCnpjValidationError(form.cnpj);
+    if (error) {
+      setCnpjError(error);
       return;
     }
     setCnpjError("");
@@ -171,6 +172,15 @@ export function ProviderRegisterModal({ onClose, onSuccess, initialData }: Props
 
   async function submit() {
     if (!validateStep3()) return;
+    if (!isEditMode) {
+      const cnpjErr = getCnpjValidationError(form.cnpj);
+      if (cnpjErr) {
+        setSubmitError(cnpjErr);
+        setStep(1);
+        setCnpjError(cnpjErr);
+        return;
+      }
+    }
     setSubmitting(true);
     setSubmitError("");
     try {
@@ -259,7 +269,10 @@ export function ProviderRegisterModal({ onClose, onSuccess, initialData }: Props
                   type="text"
                   inputMode="numeric"
                   value={form.cnpj}
-                  onChange={(e) => set("cnpj", maskCnpj(e.target.value))}
+                  onChange={(e) => {
+                    set("cnpj", maskCnpj(e.target.value));
+                    if (cnpjError) setCnpjError("");
+                  }}
                   onKeyDown={(e) => e.key === "Enter" && advanceFromStep1()}
                   placeholder="00.000.000/0000-00"
                   maxLength={18}
@@ -270,7 +283,7 @@ export function ProviderRegisterModal({ onClose, onSuccess, initialData }: Props
 
               <button
                 onClick={advanceFromStep1}
-                disabled={form.cnpj.replace(/\D/g, "").length !== 14}
+                disabled={!isValidCnpj(form.cnpj)}
                 className="w-full py-3 bg-brand-500 hover:bg-brand-600 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold rounded-xl transition-colors text-sm"
               >
                 Continuar →
