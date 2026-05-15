@@ -112,7 +112,7 @@ export function NewsGrid() {
     } else {
       params.set("category", cat);
     }
-    router.push(`/?${params.toString()}`, { scroll: false });
+    router.push(`/noticias?${params.toString()}`, { scroll: false });
   };
 
   const handleStateChange = (stateCode: string) => {
@@ -124,7 +124,7 @@ export function NewsGrid() {
     } else {
       params.delete("state");
     }
-    router.push(`/?${params.toString()}`, { scroll: false });
+    router.push(`/noticias?${params.toString()}`, { scroll: false });
   };
 
   const handleSearchChange = (val: string) => {
@@ -204,7 +204,7 @@ export function NewsGrid() {
               setCategory("todos");
               setState("");
               setPage(1);
-              router.push("/", { scroll: false });
+              router.push("/noticias", { scroll: false });
             }}
             className="mt-2 text-sm text-brand-500 hover:text-brand-600 font-medium underline underline-offset-2"
           >
