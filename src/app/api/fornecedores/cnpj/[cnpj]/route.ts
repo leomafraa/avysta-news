@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import type { CnpjApiData } from "@/types/providers";
+import { formatCnpj, getCnpjValidationError, normalizeCnpj } from "@/lib/cnpj";
 
 function formatPhone(raw: string): string {
   const digits = raw?.replace(/\D/g, "") || "";
@@ -21,20 +22,16 @@ function toTitleCase(str: string): string {
     .join(" ");
 }
 
-function formatCnpj(cnpj: string): string {
-  const d = cnpj.replace(/\D/g, "").padStart(14, "0");
-  return `${d.slice(0, 2)}.${d.slice(2, 5)}.${d.slice(5, 8)}/${d.slice(8, 12)}-${d.slice(12)}`;
-}
-
 export async function GET(
   _request: NextRequest,
   { params }: { params: Promise<{ cnpj: string }> }
 ) {
   const { cnpj } = await params;
-  const clean = cnpj.replace(/\D/g, "");
+  const clean = normalizeCnpj(cnpj);
 
-  if (clean.length !== 14) {
-    return NextResponse.json({ error: "CNPJ inválido." }, { status: 400 });
+  const cnpjError = getCnpjValidationError(clean);
+  if (cnpjError) {
+    return NextResponse.json({ error: cnpjError }, { status: 400 });
   }
 
   try {

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { readProviders, addProvider, generateId } from "@/lib/providersStore";
 import { toPublic } from "@/lib/auth";
 import { uploadProviderLogoFromDataUrl, MSG_PROVIDER_SAVE_FAILED } from "@/lib/providerLogoUpload";
+import { formatCnpj, getCnpjValidationError, normalizeCnpj } from "@/lib/cnpj";
 import { getBearerToken, getUserFromAccessToken } from "@/lib/session";
 import { updateUser } from "@/lib/usersStore";
 import type { ProvidersApiResponse, Provider, ProviderCategory } from "@/types/providers";
@@ -100,9 +101,14 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    const cnpjError = getCnpjValidationError(body.cnpj);
+    if (cnpjError) {
+      return NextResponse.json({ error: cnpjError }, { status: 400 });
+    }
+
     // Check for duplicate CNPJ
     const all = await readProviders();
-    const cleanCnpj = body.cnpj.replace(/\D/g, "");
+    const cleanCnpj = normalizeCnpj(body.cnpj);
     if (all.some((p) => p.cnpj.replace(/\D/g, "") === cleanCnpj)) {
       return NextResponse.json(
         { error: "Este CNPJ já está cadastrado." },
@@ -125,7 +131,7 @@ export async function POST(request: NextRequest) {
     const newProvider: Provider = {
       id,
       userId: dbUser.id,
-      cnpj: body.cnpj,
+      cnpj: formatCnpj(cleanCnpj),
       razaoSocial: body.razaoSocial || body.nomeFantasia,
       nomeFantasia: body.nomeFantasia,
       category: body.category,
