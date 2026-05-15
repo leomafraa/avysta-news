@@ -16,9 +16,7 @@ export function middleware(request: NextRequest) {
   const token = request.cookies.get("avysta_auth")?.value;
 
   if (!isAccessTokenValid(token)) {
-    const loginUrl = new URL("/login", request.url);
-    loginUrl.searchParams.set("next", pathname);
-    return NextResponse.redirect(loginUrl);
+    return NextResponse.redirect(new URL("/", request.url));
   }
 
   return NextResponse.next();
