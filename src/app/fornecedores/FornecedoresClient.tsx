@@ -301,23 +301,18 @@ export function FornecedoresClient() {
       </div>
 
       {/* Count */}
-      <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400 mb-5">
-        <span>
-          {loading ? (
-            <span className="inline-flex items-center gap-2">
-              <RefreshIcon className="w-4 h-4 animate-spin" />
-              Buscando...
-            </span>
-          ) : (
-            <>
-              <strong className="text-gray-900 dark:text-white">{total}</strong>{" "}
-              {total === 1 ? "empresa encontrada" : "empresas encontradas"}
-            </>
-          )}
-        </span>
-        <span className="text-xs hidden sm:block">
-          ⭐ Premium · ✓ Verificado · Grátis
-        </span>
+      <div className="text-sm text-gray-500 dark:text-gray-400 mb-5">
+        {loading ? (
+          <span className="inline-flex items-center gap-2">
+            <RefreshIcon className="w-4 h-4 animate-spin" />
+            Buscando...
+          </span>
+        ) : (
+          <>
+            <strong className="text-gray-900 dark:text-white">{total}</strong>{" "}
+            {total === 1 ? "empresa encontrada" : "empresas encontradas"}
+          </>
+        )}
       </div>
 
       {/* Error */}
