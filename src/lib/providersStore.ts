@@ -6,8 +6,8 @@ type ProviderRow = {
   user_id: string | null;
   cnpj: string;
   cnpj_normalized: string;
-  razao_social: string;
-  nome_fantasia: string;
+  legal_name: string;
+  trade_name: string;
   category: Provider["category"];
   description: string;
   state: string;
@@ -21,7 +21,7 @@ type ProviderRow = {
   verified: boolean;
   created_at: string;
   cnae: string | null;
-  cnae_descricao: string | null;
+  cnae_description: string | null;
 };
 
 function normalizeCnpj(cnpj: string): string {
@@ -33,8 +33,8 @@ function rowToProvider(row: ProviderRow): Provider {
     id: row.id,
     userId: row.user_id ?? undefined,
     cnpj: row.cnpj,
-    razaoSocial: row.razao_social,
-    nomeFantasia: row.nome_fantasia,
+    razaoSocial: row.legal_name,
+    nomeFantasia: row.trade_name,
     category: row.category,
     description: row.description,
     state: row.state,
@@ -48,7 +48,7 @@ function rowToProvider(row: ProviderRow): Provider {
     verified: row.verified,
     createdAt: row.created_at,
     cnae: row.cnae ?? undefined,
-    cnaeDescricao: row.cnae_descricao ?? undefined,
+    cnaeDescricao: row.cnae_description ?? undefined,
   };
 }
 
@@ -70,8 +70,8 @@ export async function writeProviders(providers: Provider[]): Promise<void> {
     user_id: p.userId ?? null,
     cnpj: p.cnpj,
     cnpj_normalized: normalizeCnpj(p.cnpj),
-    razao_social: p.razaoSocial,
-    nome_fantasia: p.nomeFantasia,
+    legal_name: p.razaoSocial,
+    trade_name: p.nomeFantasia,
     category: p.category,
     description: p.description,
     state: p.state,
@@ -85,7 +85,7 @@ export async function writeProviders(providers: Provider[]): Promise<void> {
     verified: p.verified,
     created_at: p.createdAt,
     cnae: p.cnae ?? null,
-    cnae_descricao: p.cnaeDescricao ?? null,
+    cnae_description: p.cnaeDescricao ?? null,
   }));
 
   const { error } = await supabaseServer
@@ -105,8 +105,8 @@ export async function addProvider(provider: Provider): Promise<void> {
       user_id: provider.userId ?? null,
       cnpj: provider.cnpj,
       cnpj_normalized: normalizeCnpj(provider.cnpj),
-      razao_social: provider.razaoSocial,
-      nome_fantasia: provider.nomeFantasia,
+      legal_name: provider.razaoSocial,
+      trade_name: provider.nomeFantasia,
       category: provider.category,
       description: provider.description,
       state: provider.state,
@@ -120,7 +120,7 @@ export async function addProvider(provider: Provider): Promise<void> {
       verified: provider.verified,
       created_at: provider.createdAt,
       cnae: provider.cnae ?? null,
-      cnae_descricao: provider.cnaeDescricao ?? null,
+      cnae_description: provider.cnaeDescricao ?? null,
     });
 
   if (error) {
@@ -150,8 +150,8 @@ export async function updateProvider(id: string, patch: Partial<Provider>): Prom
     updatePayload.cnpj = patch.cnpj;
     updatePayload.cnpj_normalized = normalizeCnpj(patch.cnpj);
   }
-  if (patch.razaoSocial !== undefined) updatePayload.razao_social = patch.razaoSocial;
-  if (patch.nomeFantasia !== undefined) updatePayload.nome_fantasia = patch.nomeFantasia;
+  if (patch.razaoSocial !== undefined) updatePayload.legal_name = patch.razaoSocial;
+  if (patch.nomeFantasia !== undefined) updatePayload.trade_name = patch.nomeFantasia;
   if (patch.category !== undefined) updatePayload.category = patch.category;
   if (patch.description !== undefined) updatePayload.description = patch.description;
   if (patch.state !== undefined) updatePayload.state = patch.state;
@@ -167,7 +167,7 @@ export async function updateProvider(id: string, patch: Partial<Provider>): Prom
   if (patch.verified !== undefined) updatePayload.verified = patch.verified;
   if (patch.createdAt !== undefined) updatePayload.created_at = patch.createdAt;
   if (patch.cnae !== undefined) updatePayload.cnae = patch.cnae;
-  if (patch.cnaeDescricao !== undefined) updatePayload.cnae_descricao = patch.cnaeDescricao;
+  if (patch.cnaeDescricao !== undefined) updatePayload.cnae_description = patch.cnaeDescricao;
 
   const { data, error } = await supabaseServer
     .from("providers")

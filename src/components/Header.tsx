@@ -7,6 +7,7 @@ import { useState, useRef, useEffect } from "react";
 import { useTheme } from "./ThemeProvider";
 import { useAuth } from "./AuthProvider";
 import { SunIcon, MoonIcon } from "./Icons";
+import { ImprovementSuggestionModal } from "./ImprovementSuggestionModal";
 
 const navLinks = [
   { href: "/noticias", label: "📰 Notícias" },
@@ -24,6 +25,7 @@ export function Header() {
   const router = useRouter();
 
   const [menuOpen, setMenuOpen] = useState(false);
+  const [suggestionOpen, setSuggestionOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
   // Close dropdown on outside click
@@ -89,6 +91,15 @@ export function Header() {
                 </Link>
               );
             })}
+            {user && (
+              <button
+                type="button"
+                onClick={() => setSuggestionOpen(true)}
+                className="px-3.5 py-2 rounded-lg text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors whitespace-nowrap"
+              >
+                💡 Sugestões de melhoria
+              </button>
+            )}
           </nav>
 
           {/* Right side */}
@@ -249,6 +260,18 @@ export function Header() {
               </Link>
             );
           })}
+          {user && (
+            <button
+              type="button"
+              onClick={() => {
+                setMenuOpen(false);
+                setSuggestionOpen(true);
+              }}
+              className="block w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800"
+            >
+              💡 Sugestões de melhoria
+            </button>
+          )}
         </div>
 
         <div className="border-t border-gray-100 dark:border-gray-800 px-4 py-3 space-y-2">
@@ -306,6 +329,10 @@ export function Header() {
             ))}
         </div>
       </div>
+
+      {suggestionOpen && user && (
+        <ImprovementSuggestionModal onClose={() => setSuggestionOpen(false)} />
+      )}
     </header>
   );
 }
