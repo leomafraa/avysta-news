@@ -44,7 +44,7 @@ export async function POST(request: NextRequest) {
           name: name.trim(),
           phone: phone.trim(),
           type,
-          empresa_nome_fantasia:
+          company_trade_name:
             type === "comprador" ? empresaNomeFantasia!.trim() : null,
         },
       },
