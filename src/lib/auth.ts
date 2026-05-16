@@ -1,4 +1,4 @@
-import type { UserPublic } from "@/types/user";
+import type { UserPublic, UserType } from "@/types/user";
 
 type User = {
   id: string;
@@ -10,6 +10,20 @@ type User = {
   createdAt: string;
   providerId?: string;
 };
+
+/** Rota inicial após login/cadastro conforme o tipo de conta. */
+export function getDefaultRouteForUserType(type: UserType): string {
+  return type === "fornecedor" ? "/fornecedores" : "/noticias";
+}
+
+/** Respeita `?next=` quando informado; senão usa a rota padrão do tipo. */
+export function getPostLoginRoute(user: { type: UserType }, next?: string | null): string {
+  const trimmed = next?.trim();
+  if (trimmed && trimmed.startsWith("/") && !trimmed.startsWith("//")) {
+    return trimmed;
+  }
+  return getDefaultRouteForUserType(user.type);
+}
 
 export function toPublic(user: User): UserPublic {
   return {

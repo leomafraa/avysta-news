@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/components/AuthProvider";
 import type { UserType } from "@/types/user";
+import { getDefaultRouteForUserType } from "@/lib/auth";
 
 function maskPhone(v: string) {
   const d = v.replace(/\D/g, "").slice(0, 11);
@@ -45,8 +46,8 @@ export default function LandingPage() {
   const [acceptedTerms, setAcceptedTerms] = useState(false);
 
   useEffect(() => {
-    if (!loading && user) router.replace("/noticias");
-  }, [user, loading, router]);
+    if (!loading && user) router.replace(getDefaultRouteForUserType(user.type));
+  }, [user, loading, router, user]);
 
   function set(field: keyof typeof form, value: string) {
     setForm((p) => ({ ...p, [field]: value }));
@@ -101,7 +102,7 @@ export default function LandingPage() {
         return;
       }
       login(data.token, data.refreshToken, data.user);
-      router.push("/noticias");
+      router.push(getDefaultRouteForUserType(data.user.type));
     } catch {
       setError("Erro de conexão. Tente novamente.");
     } finally {
