@@ -4,6 +4,7 @@ import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/components/AuthProvider";
+import { getDefaultRouteForUserType, getPostLoginRoute } from "@/lib/auth";
 
 export default function LoginPageWrapper() {
   return (
@@ -17,16 +18,14 @@ function LoginPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { user, loading, login } = useAuth();
-  const next = searchParams.get("next") || "/noticias";
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
 
   useEffect(() => {
-    if (!loading && user) router.replace("/noticias");
-  }, [user, loading, router]);
+    if (!loading && user) router.replace(getDefaultRouteForUserType(user.type));
+  }, [user, loading, router, user]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -43,7 +42,7 @@ function LoginPage() {
       const data = await res.json();
       if (!res.ok) { setError(data.error || "Erro ao entrar."); return; }
       login(data.token, data.refreshToken, data.user);
-      router.push(next);
+      router.push(getPostLoginRoute(data.user, searchParams.get("next")));
     } catch {
       setError("Erro de conexão. Tente novamente.");
     } finally {
