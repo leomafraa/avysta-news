@@ -138,6 +138,15 @@ export function NewsGrid() {
 
   const featured = news.slice(0, 1);
   const rest = news.slice(1);
+  const showPagination = !loading && totalPages > 1;
+
+  const paginationBar = showPagination ? (
+    <Pagination
+      currentPage={page}
+      totalPages={totalPages}
+      onPageChange={handlePageChange}
+    />
+  ) : null;
 
   return (
     <div className="space-y-6">
@@ -173,6 +182,10 @@ export function NewsGrid() {
           </span>
         )}
       </div>
+
+      {paginationBar && (
+        <div className="pb-2">{paginationBar}</div>
+      )}
 
       {/* Error state */}
       {error && (
@@ -244,16 +257,7 @@ export function NewsGrid() {
         </div>
       )}
 
-      {/* Pagination */}
-      {!loading && totalPages > 1 && (
-        <div className="pt-4">
-          <Pagination
-            currentPage={page}
-            totalPages={totalPages}
-            onPageChange={handlePageChange}
-          />
-        </div>
-      )}
+      {paginationBar && <div className="pt-4">{paginationBar}</div>}
     </div>
   );
 }
