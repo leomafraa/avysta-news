@@ -167,7 +167,7 @@ export default function LandingPage() {
       <div className="lg:w-1/2 flex items-center justify-center px-6 py-12 bg-gray-50 dark:bg-gray-950">
         <div className="w-full max-w-sm">
           <div className="mb-8">
-            <h2 className="text-2xl font-extrabold text-gray-900 dark:text-white">Criar conta grátis</h2>
+            <h2 className="text-2xl font-extrabold text-gray-900 dark:text-white">Faça parte da comunidade</h2>
             <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
               {step === 1 ? "Como você usa a plataforma?" : "Informe seus dados"}
             </p>
