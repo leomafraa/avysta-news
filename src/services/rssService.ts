@@ -13,7 +13,7 @@ const parser = new Parser({
   timeout: 10000,
   headers: {
     "User-Agent":
-      "Mozilla/5.0 (compatible; AvystaCommunityBot/1.0; +https://avysta.com.br)",
+      "Mozilla/5.0 (compatible; AvystaComunidadeBot/1.0; +https://avysta.com.br)",
     Accept: "application/rss+xml, application/xml, text/xml, */*",
   },
 });

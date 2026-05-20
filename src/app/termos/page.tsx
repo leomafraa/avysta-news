@@ -2,8 +2,8 @@ import Link from "next/link";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Termos e Condições | Avysta Community",
-  description: "Leia os Termos e Condições de uso da plataforma Avysta Community.",
+  title: "Termos e Condições | Avysta Comunidade",
+  description: "Leia os Termos e Condições de uso da plataforma Avysta Comunidade.",
 };
 
 const LAST_UPDATED = "24 de abril de 2026";
@@ -19,7 +19,7 @@ export default function TermosPage() {
               <span className="text-white font-bold text-sm">A</span>
             </div>
             <span className="font-bold text-lg text-gray-900 dark:text-white tracking-tight">
-              avysta<span className="font-light text-gray-400">community</span>
+              avysta<span className="font-light text-gray-400">comunidade</span>
             </span>
           </Link>
           <Link
@@ -49,14 +49,14 @@ export default function TermosPage() {
             <section>
               <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-3">1. Aceitação dos Termos</h2>
               <p className="leading-relaxed">
-                Ao criar uma conta e utilizar a plataforma Avysta Community, você concorda integralmente com estes Termos e Condições. Caso não concorde com qualquer disposição aqui prevista, não utilize a plataforma.
+                Ao criar uma conta e utilizar a plataforma Avysta Comunidade, você concorda integralmente com estes Termos e Condições. Caso não concorde com qualquer disposição aqui prevista, não utilize a plataforma.
               </p>
             </section>
 
             <section>
               <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-3">2. Descrição do Serviço</h2>
               <p className="leading-relaxed">
-                A Avysta Community é uma plataforma digital voltada ao setor de construção civil no Brasil, que oferece:
+                A Avysta Comunidade é uma plataforma digital voltada ao setor de construção civil no Brasil, que oferece:
               </p>
               <ul className="list-disc list-inside mt-3 space-y-1.5 ml-2">
                 <li>Agregação de notícias do setor em tempo real;</li>
@@ -72,7 +72,7 @@ export default function TermosPage() {
                 Para acessar os recursos da plataforma, o usuário deve criar uma conta fornecendo informações verdadeiras, completas e atualizadas. O usuário é responsável pela confidencialidade de suas credenciais de acesso e por todas as atividades realizadas em sua conta.
               </p>
               <p className="leading-relaxed mt-3">
-                A Avysta Community se reserva o direito de suspender ou encerrar contas que violem estes Termos ou que forneçam informações falsas.
+                A Avysta Comunidade se reserva o direito de suspender ou encerrar contas que violem estes Termos ou que forneçam informações falsas.
               </p>
             </section>
 
@@ -102,14 +102,14 @@ export default function TermosPage() {
             <section>
               <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-3">6. Conteúdo do Usuário</h2>
               <p className="leading-relaxed">
-                O usuário é o único responsável pelo conteúdo que publica na plataforma, incluindo descrições de empresas, avaliações e informações de contato. Ao publicar conteúdo, o usuário concede à Avysta Community uma licença não exclusiva para exibir, distribuir e utilizar esse conteúdo no âmbito da plataforma.
+                O usuário é o único responsável pelo conteúdo que publica na plataforma, incluindo descrições de empresas, avaliações e informações de contato. Ao publicar conteúdo, o usuário concede à Avysta Comunidade uma licença não exclusiva para exibir, distribuir e utilizar esse conteúdo no âmbito da plataforma.
               </p>
             </section>
 
             <section>
               <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-3">7. Privacidade e Proteção de Dados</h2>
               <p className="leading-relaxed">
-                A Avysta Community trata os dados pessoais dos usuários em conformidade com a Lei Geral de Proteção de Dados (LGPD — Lei nº 13.709/2018). Os dados coletados são utilizados exclusivamente para o funcionamento da plataforma, melhoria dos serviços e comunicações relacionadas ao seu uso.
+                A Avysta Comunidade trata os dados pessoais dos usuários em conformidade com a Lei Geral de Proteção de Dados (LGPD — Lei nº 13.709/2018). Os dados coletados são utilizados exclusivamente para o funcionamento da plataforma, melhoria dos serviços e comunicações relacionadas ao seu uso.
               </p>
               <p className="leading-relaxed mt-3">
                 Não vendemos nem compartilhamos dados pessoais com terceiros para fins de marketing sem o consentimento explícito do usuário.
@@ -119,7 +119,7 @@ export default function TermosPage() {
             <section>
               <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-3">8. Isenção de Responsabilidade</h2>
               <p className="leading-relaxed">
-                As cotações de materiais disponibilizadas na plataforma são de caráter informativo e baseadas em índices públicos. A Avysta Community não garante a precisão dos valores praticados no mercado local.
+                As cotações de materiais disponibilizadas na plataforma são de caráter informativo e baseadas em índices públicos. A Avysta Comunidade não garante a precisão dos valores praticados no mercado local.
               </p>
               <p className="leading-relaxed mt-3">
                 A plataforma não se responsabiliza por negociações, contratos ou transações realizadas entre compradores e fornecedores fora do ambiente da plataforma.
@@ -129,21 +129,21 @@ export default function TermosPage() {
             <section>
               <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-3">9. Disponibilidade do Serviço</h2>
               <p className="leading-relaxed">
-                A Avysta Community envida seus melhores esforços para manter a plataforma disponível de forma contínua, porém não garante disponibilidade ininterrupta. Manutenções programadas ou emergenciais poderão ocorrer sem aviso prévio.
+                A Avysta Comunidade envida seus melhores esforços para manter a plataforma disponível de forma contínua, porém não garante disponibilidade ininterrupta. Manutenções programadas ou emergenciais poderão ocorrer sem aviso prévio.
               </p>
             </section>
 
             <section>
               <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-3">10. Alterações nos Termos</h2>
               <p className="leading-relaxed">
-                A Avysta Community pode atualizar estes Termos periodicamente. As alterações serão comunicadas por e-mail ou por notificação na plataforma. O uso continuado após as alterações implica na aceitação dos novos termos.
+                A Avysta Comunidade pode atualizar estes Termos periodicamente. As alterações serão comunicadas por e-mail ou por notificação na plataforma. O uso continuado após as alterações implica na aceitação dos novos termos.
               </p>
             </section>
 
             <section>
               <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-3">11. Encerramento de Conta</h2>
               <p className="leading-relaxed">
-                O usuário pode solicitar o encerramento de sua conta a qualquer momento. A Avysta Community poderá encerrar contas que violem estes Termos, sem prejuízo de outras medidas cabíveis.
+                O usuário pode solicitar o encerramento de sua conta a qualquer momento. A Avysta Comunidade poderá encerrar contas que violem estes Termos, sem prejuízo de outras medidas cabíveis.
               </p>
             </section>
 
@@ -179,7 +179,7 @@ export default function TermosPage() {
       </main>
 
       <footer className="text-center py-8 text-xs text-gray-400 dark:text-gray-600">
-        © {new Date().getFullYear()} Avysta Community · Todos os direitos reservados
+        © {new Date().getFullYear()} Avysta Comunidade · Todos os direitos reservados
       </footer>
     </div>
   );

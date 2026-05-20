@@ -130,7 +130,7 @@ export default function LandingPage() {
               />
             </div>
             <span className="font-bold text-2xl tracking-tight">
-              avysta<span className="font-light opacity-80">community</span>
+              avysta<span className="font-light opacity-80">comunidade</span>
             </span>
           </div>
 
@@ -159,7 +159,7 @@ export default function LandingPage() {
         </div>
 
         <p className="text-brand-300 text-xs mt-12 hidden lg:block">
-          © {new Date().getFullYear()} Avysta Community · Gratuito para todos
+          © {new Date().getFullYear()} Avysta Comunidade · Gratuito para todos
         </p>
       </div>
 
@@ -336,7 +336,7 @@ export default function LandingPage() {
                   <Link href="/termos" target="_blank" className="text-brand-500 hover:text-brand-600 font-semibold underline underline-offset-2">
                     Termos e Condições
                   </Link>{" "}
-                  de uso da plataforma Avysta Community.
+                  de uso da plataforma Avysta Comunidade.
                 </span>
               </label>
 

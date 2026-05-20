@@ -113,7 +113,7 @@ export default function AtualizarSenhaPage() {
             <span className="text-white font-bold text-lg">A</span>
           </div>
           <span className="font-bold text-2xl tracking-tight">
-            avysta<span className="font-light opacity-80">community</span>
+            avysta<span className="font-light opacity-80">comunidade</span>
           </span>
         </Link>
         <div className="hidden lg:block">
@@ -125,7 +125,7 @@ export default function AtualizarSenhaPage() {
           </p>
         </div>
         <p className="text-brand-300 text-xs hidden lg:block">
-          © {new Date().getFullYear()} Avysta Community
+          © {new Date().getFullYear()} Avysta Comunidade
         </p>
       </div>
 

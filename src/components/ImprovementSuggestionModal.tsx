@@ -128,7 +128,7 @@ export function ImprovementSuggestionModal({ onClose }: Props) {
 
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           <p className="text-sm text-gray-500 dark:text-gray-400">
-            Sua opinião ajuda a evoluir a Avysta Community. Conte o que podemos
+            Sua opinião ajuda a evoluir a Avysta Comunidade. Conte o que podemos
             melhorar na plataforma.
           </p>
 

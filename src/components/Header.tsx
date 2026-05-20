@@ -68,7 +68,7 @@ export function Header() {
             </div>
             <span className="font-bold text-xl text-gray-900 dark:text-white tracking-tight">
               avysta
-              <span className="text-brand-500 font-light">community</span>
+              <span className="text-brand-500 font-light">comunidade</span>
             </span>
           </Link>
 

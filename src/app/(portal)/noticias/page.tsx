@@ -4,7 +4,7 @@ import { NewsGrid } from "@/components/NewsGrid";
 import { RefreshIcon } from "@/components/Icons";
 
 export const metadata: Metadata = {
-  title: "Notícias | Avysta Community",
+  title: "Notícias | Avysta Comunidade",
   description:
     "Acompanhe as últimas notícias sobre construção civil, mercado imobiliário, materiais, infraestrutura e tecnologia no Brasil.",
 };

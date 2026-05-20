@@ -15,8 +15,8 @@ export const metadata: Metadata = {
     process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"
   ),
   title: {
-    default: "Avysta Community — Notícias de Construção Civil no Brasil",
-    template: "%s | Avysta Community",
+    default: "Avysta Comunidade — Notícias de Construção Civil no Brasil",
+    template: "%s | Avysta Comunidade",
   },
   description:
     "Portal de notícias especializado em construção civil no Brasil. Acompanhe as últimas notícias sobre materiais, mercado imobiliário, infraestrutura, tecnologia e financiamento.",
@@ -35,14 +35,14 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "pt_BR",
-    siteName: "Avysta Community",
-    title: "Avysta Community — Notícias de Construção Civil no Brasil",
+    siteName: "Avysta Comunidade",
+    title: "Avysta Comunidade — Notícias de Construção Civil no Brasil",
     description:
       "Portal de notícias especializado em construção civil no Brasil.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Avysta Community",
+    title: "Avysta Comunidade",
     description: "Notícias de construção civil no Brasil",
   },
   robots: {

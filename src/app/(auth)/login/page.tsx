@@ -62,7 +62,7 @@ function LoginPage() {
             <span className="text-white font-bold text-lg">A</span>
           </div>
           <span className="font-bold text-2xl tracking-tight">
-            avysta<span className="font-light opacity-80">community</span>
+            avysta<span className="font-light opacity-80">comunidade</span>
           </span>
         </Link>
 
@@ -76,7 +76,7 @@ function LoginPage() {
         </div>
 
         <p className="text-brand-300 text-xs hidden lg:block">
-          © {new Date().getFullYear()} Avysta Community
+          © {new Date().getFullYear()} Avysta Comunidade
         </p>
       </div>
 
@@ -88,7 +88,7 @@ function LoginPage() {
               <span className="text-white font-bold text-sm">A</span>
             </div>
             <span className="font-bold text-xl text-gray-900 dark:text-white">
-              avysta<span className="text-brand-500 font-light">community</span>
+              avysta<span className="text-brand-500 font-light">comunidade</span>
             </span>
           </div>
 
